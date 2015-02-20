@@ -7,5 +7,6 @@
     <string name="title_activity_help_page">HelpPage</string>
     <string name="title_activity_arcamera">ARCamera</string>
     <string name="title_activity_map">Map</string>
+    <string name="title_activity_building_info">BuildingInfo</string>
 
 </resources>

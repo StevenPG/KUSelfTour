@@ -68,7 +68,7 @@ public class Map extends ActionBarActivity {
         TextView textLatitude;
         String lat;
         String provider;
-        protected String latitude, longitude;
+        protected Double latitude, longitude;
         protected boolean gps_enabled, network_enabled;
 
         // Location update constants
@@ -96,6 +96,11 @@ public class Map extends ActionBarActivity {
         @Override
         public void onLocationChanged(Location location) {
             textLatitude = (TextView) findViewById(R.id.Location);
+
+            // Save the values each time for external use
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+
             textLatitude.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
             Log.e("TEST", "Updating Location");
         }
