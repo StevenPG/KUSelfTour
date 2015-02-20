@@ -24,8 +24,10 @@ public class Map extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        // Create a Locator and find location via network
         Locator loc = new Locator();
         loc.createFields();
+        // End non-IDE code
     }
 
 
@@ -51,13 +53,15 @@ public class Map extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // IDE Generated code above, Developer code below
+    // IDE Generated code above (some edits in onCreate() ), Developer code below
 
+    /**
+     * This class is the bare minimum necessary to gain the latitude/longitude
+     * coordinates of the app user.
+     */
     public class Locator implements LocationListener {
 
-        /**
-         * Location fields
-         */
+        // Location fields
         protected LocationManager locationManager;
         protected LocationListener locationListener;
         protected Context context;
@@ -67,25 +71,37 @@ public class Map extends ActionBarActivity {
         protected String latitude, longitude;
         protected boolean gps_enabled, network_enabled;
 
+        // Location update constants
+        private int PROXIMITY_UPDATE_DISTANCE = 20; //(meters)
+        private int UPDATE_EVERY_X_TIME = 100; // (milliseconds)
+
+        // Location Methods
+
         /**
-         * Location Methods
+         * Create fields and begin requesting location updates based on Network Provider
+         * Other Provider: GPS_PROVIDER
          */
         public void createFields() {
-            textLatitude = (TextView) findViewById(R.id.Location);
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    UPDATE_EVERY_X_TIME, PROXIMITY_UPDATE_DISTANCE, this);
+            Log.e("TEST", "Creating fields and requesting location");
+            textLatitude = (TextView) findViewById(R.id.Location);
         }
 
         /**
+         * Update location when called
          * @param location
          */
         @Override
         public void onLocationChanged(Location location) {
             textLatitude = (TextView) findViewById(R.id.Location);
             textLatitude.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
+            Log.e("TEST", "Updating Location");
         }
 
         /**
+         * Run when the provider becomes disabled
          * @param provider
          */
         @Override
@@ -94,6 +110,7 @@ public class Map extends ActionBarActivity {
         }
 
         /**
+         * Runs when the Provider is reenabled
          * @param provider
          */
         @Override
@@ -102,6 +119,7 @@ public class Map extends ActionBarActivity {
         }
 
         /**
+         * Runs on each status change
          * @param provider
          * @param status
          * @param extras
@@ -112,4 +130,5 @@ public class Map extends ActionBarActivity {
         }
 
 }
+
 }
