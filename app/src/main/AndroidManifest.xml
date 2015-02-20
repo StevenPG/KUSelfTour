@@ -16,7 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".HelpPage"
             android:label="@string/app_name" >
@@ -24,7 +23,14 @@
                 <action android:name="android.intent.action.android" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".ARCamera"
+            android:label="@string/title_activity_arcamera" >
+        </activity>
+        <activity
+            android:name=".Map"
+            android:label="@string/title_activity_map" >
+        </activity>
     </application>
 
 </manifest>

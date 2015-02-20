@@ -63,6 +63,12 @@ public class MainMenu extends ActionBarActivity {
     }
 
     public void openAR(View view) {
+        Intent intent = new Intent(this, ARCamera.class);
+        startActivity(intent);
+    }
 
+    public void openMap(View view) {
+        Intent intent = new Intent(this, Map.class);
+        startActivity(intent);
     }
 }

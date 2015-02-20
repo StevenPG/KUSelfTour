@@ -27,7 +27,7 @@
         android:layout_alignRight="@+id/ARButton"
         android:layout_alignEnd="@+id/ARButton"
 
-        android:onClick="openHelp" />
+        android:onClick="openMap" />
 
     <Button
         android:layout_width="wrap_content"
