@@ -24,10 +24,6 @@ public class Map extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        // Create a Locator and find location via network
-        Locator loc = new Locator();
-        loc.createFields();
-        // End non-IDE code
     }
 
 
@@ -53,6 +49,11 @@ public class Map extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    // FEEL FREE TO DELETE THE CODE BELOW, EVERYTHING ABOVE THIS POINT IS REQUIRED AND IF YOU DELETE WILL CREATE ERRORS.
+    // EVERYTHING BELOW IS MY LOCATOR IMPLEMENTATION, YOU SHOUOLD PROBABLY JUST BUILD IT INTO THE ACTIVITY, SO DON'T WORRY
+    // ABOUT KEEPING OR USING THIS CLASS, IT MIGHT BE MORE OF A HINDERENCE.
+    // AGAIN, KEEP ABOVE THIS COMMENT, DELETE BELOW
     // IDE Generated code above (some edits in onCreate() ), Developer code below
 
     /**
