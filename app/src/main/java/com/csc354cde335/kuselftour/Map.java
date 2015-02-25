@@ -24,6 +24,8 @@ public class Map extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        Locator coords = new Locator();
+        coords.createFields();
     }
 
 
@@ -73,8 +75,8 @@ public class Map extends ActionBarActivity {
         protected boolean gps_enabled, network_enabled;
 
         // Location update constants
-        private int PROXIMITY_UPDATE_DISTANCE = 20; //(meters)
-        private int UPDATE_EVERY_X_TIME = 100; // (milliseconds)
+        private int PROXIMITY_UPDATE_DISTANCE = 1; //(meters)
+        private int UPDATE_EVERY_X_TIME = 1; // (milliseconds)
 
         // Location Methods
 
@@ -103,7 +105,7 @@ public class Map extends ActionBarActivity {
             this.longitude = location.getLongitude();
 
             textLatitude.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-            Log.e("TEST", "Updating Location");
+            Log.e("TEST", "Updating Location Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
         }
 
         /**
