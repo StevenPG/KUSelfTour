@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+// Comment
+
 /**
  * The help page will be non-interactive. This activity
  * exists only to assist the user in understanding the
