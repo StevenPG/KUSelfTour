@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-// Comment poo
+// Comment
 
 /**
  * The help page will be non-interactive. This activity
