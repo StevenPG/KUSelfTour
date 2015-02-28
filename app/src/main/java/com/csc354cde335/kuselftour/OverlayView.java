@@ -202,6 +202,27 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
                 canvas.getWidth()/2,
                 (canvas.getHeight()*6)/6,
                 contentPaint);
+
+        // Sample drawing of horizon and node at location
+        // use roll for screen rotation
+        /*canvas.rotate((float)(0.0f- Math.toDegrees(orientation[2])));
+        // Translate, but normalize for the FOV of the camera -- basically, pixels per degree, times degrees == pixels
+        float dx = (float) ( (canvas.getWidth()/ horizontalFOV) * (Math.toDegrees(orientation[0])-curBearingToMW));
+        float dy = (float) ( (canvas.getHeight()/ verticalFOV) * Math.toDegrees(orientation[1])) ;
+
+        // wait to translate the dx so the horizon doesn't get pushed off
+        canvas.translate(0.0f, 0.0f-dy);
+
+        // make our line big enough to draw regardless of rotation and translation
+        canvas.drawLine(0f - canvas.getHeight(), canvas.getHeight()/2, canvas.getWidth()+canvas.getHeight(), canvas.getHeight()/2, targetPaint);
+
+
+        // now translate the dx
+        canvas.translate(0.0f-dx, 0.0f);
+
+        // draw our point -- we've rotated and translated this to the right spot already
+        canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 8.0f, targetPaint);
+        */
     }
 
     /**
