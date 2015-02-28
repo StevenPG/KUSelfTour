@@ -1,25 +1,34 @@
 package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
-import android.content.Context;
-import android.hardware.Camera;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import java.io.IOException;
 
 /**
- * This is a preliminary camera activity created just to
- * demonstrate application features and visualize flow.
+ * The ARCamera uses location based augmented reality to showcase information
+ * and media in real time using hardware sensors and internet features of a device.
  */
 public class ARCamera extends Activity {
 
-   /* @Override
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arcamera);
-    }
+
+       // Add custom views to the FrameLayout control
+       FrameLayout arViewPane = (FrameLayout) findViewById(R.id.ar_view_pane);
+
+       ArDisplayView arDisplay = new ArDisplayView(this,this);
+       arViewPane.addView(arDisplay);
+
+       // Add the custom overlay to the ARCamera activity and view pane
+       OverlayView arContent = new OverlayView(getApplicationContext());
+       arViewPane.addView(arContent);
+   }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,64 +50,6 @@ public class ARCamera extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-*/
-
-    // IDE defined methods above, Developer methods below
-
-    // All below is just a camera test and not be kept-- DELETE BELOW
-
-    private Camera mCamera;
-    private CameraView mView;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mCamera = Camera.open();
-        mView = new CameraView(this);
-
-        setContentView(mView);
-    }
-
-    // extending SurfaceView to render the camera images
-    private class CameraView extends SurfaceView implements SurfaceHolder.Callback{
-        private SurfaceHolder mHolder;
-
-        public CameraView(Context context) {
-            super(context);
-
-            mHolder = this.getHolder();
-            mHolder.addCallback(this);
-            mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-            setFocusable(true);
-
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) {
-        }
-
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-
-            try {
-                mCamera.setPreviewDisplay(mHolder);
-            } catch (IOException e) {
-                mCamera.release();
-            }
-            mCamera.startPreview();
-        }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-
-            mCamera.stopPreview();
-            mCamera.release();
-
-        }
-
     }
 
 }
