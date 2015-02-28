@@ -24,17 +24,17 @@ import android.view.View;
  */
 public class OverlayView extends View implements SensorEventListener, LocationListener{
 
-    // Begin Class Fields
+    // Begin Class Fields --------------------------------------- C
 
     /**
      * The Log.e's Debug tag
      */
     public static final String DEBUG_TAG = "OverlayView Log";
 
-    // End Class Fields
+    // End Class Fields --------------------------------------- C
 
 
-    // Begin SensorEvent Fields
+    // Begin SensorEvent Fields --------------------------------------- S
 
     /**
      * String containing last known value of device Accelerometer.
@@ -66,10 +66,10 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
     boolean isCompassAvailable;
     boolean isGyroAvailable;
 
-    // End SensorEvent Fields
+    // End SensorEvent Fields --------------------------------------- S
 
 
-    // Begin Location Fields
+    // Begin Location Fields --------------------------------------- L
 
     /**
      * This field holds the last known location by device hardware
@@ -104,10 +104,10 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         StevesHouse.setAltitude(51.5112);
     }
 
-    // End Location Fields
+    // End Location Fields --------------------------------------- L
 
 
-    // Begin Class Methods
+    // Begin Class Methods --------------------------------------- C
 
     /**
      * Standard Constructor
@@ -136,10 +136,10 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         lastLocation = getLocation();
     }
 
-    // End Class Methods
+    // End Class Methods --------------------------------------- C
 
 
-    // Begin SensorEvent Methods
+    // Begin SensorEvent Methods --------------------------------------- S
 
     /**
      * This draw method is what draws data to the screen
@@ -227,9 +227,9 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         // This method has no bearing on the application
     }
 
-    // End SensorEvent Methods
+    // End SensorEvent Methods --------------------------------------- S
 
-    // Begin Location Methods
+    // Begin Location Methods --------------------------------------- L
 
     /**
      * This function is appropriated from GpsTracker.java
@@ -267,12 +267,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     Log.d("Network", "Network");
                     if (locationManager != null) {
-                        lastLocation = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        if (lastLocation != null) {
-                            latitude = lastLocation.getLatitude();
-                            longitude = lastLocation.getLongitude();
-                        }
+                        lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     }
                 }
                 // if GPS Enabled get lat/long using GPS Services
@@ -284,12 +279,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
-                            lastLocation = locationManager
-                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            if (lastLocation != null) {
-                                latitude = lastLocation.getLatitude();
-                                longitude = lastLocation.getLongitude();
-                            }
+                            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         }
                     }
                 }
@@ -315,5 +305,5 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         // ...
     }
 
-    // End Location Methods
+    // End Location Methods --------------------------------------- L
 }
