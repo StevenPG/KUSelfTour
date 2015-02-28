@@ -60,6 +60,12 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
     Sensor gyroSensor; // measured in rotations around each axis in radians per second
 
     /**
+     * Values for calculating device orientation
+     */
+    float[] lastAccelerometer;
+    float[] lastCompass;
+
+    /**
      * Availability tests for each hardware object
      */
     boolean isAccelAvailable;
@@ -136,6 +142,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         lastLocation = getLocation();
     }
 
+
     // End Class Methods --------------------------------------- C
 
 
@@ -165,26 +172,73 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
                 contentPaint);
         canvas.drawText(accelData,
                 canvas.getWidth()/2,
-                canvas.getHeight()/5,
+                canvas.getHeight()/6,
                 contentPaint);
         canvas.drawText(compassData,
                 canvas.getWidth()/2,
-                canvas.getHeight()*2/5,
+                canvas.getHeight()*2/6,
                 contentPaint);
         canvas.drawText(gyroData,
                 canvas.getWidth()/2,
-                (canvas.getHeight()*3)/5,
+                (canvas.getHeight()*3)/6,
                 contentPaint);
         canvas.drawText(lastLocation.getLatitude() + ", " + lastLocation.getLongitude(),
                 canvas.getWidth()/2,
-                (canvas.getHeight()*4)/5,
+                (canvas.getHeight()*4)/6,
+                contentPaint);
+
+        // Print orientation
+        float[] orientation= getOrientation();
+
+        canvas.drawText(orientation[0] + " " +
+                orientation[1] + " " +
+                orientation[2],
+                canvas.getWidth()/2,
+                (canvas.getHeight()*5/6),
                 contentPaint);
 
         float curBearingToMW = lastLocation.bearingTo(StevesHouse);
         canvas.drawText("Bearing for test" + Float.toString(curBearingToMW),
                 canvas.getWidth()/2,
-                (canvas.getHeight()*5)/5,
+                (canvas.getHeight()*6)/6,
                 contentPaint);
+    }
+
+    /**
+     * This function retrieves the devices orientation using hardware devices
+     * @return - device orientation
+     */
+    protected float[] getOrientation(){
+        // Compute the rotation matrix
+        float rotation[] = new float[9];
+        float identity[] = new float[9];
+        boolean gotRotation = SensorManager.getRotationMatrix(rotation,
+                identity, lastAccelerometer, lastCompass);
+
+        // Compute orientation vector
+        if (gotRotation) {
+            // orientation vector
+            float orientation[] = new float[3];
+            SensorManager.getOrientation(rotation, orientation);
+        }
+
+        float cameraRotation[] = new float[9];
+        float orientation[] = new float[3];
+
+        // Remap the rotation matrix so that the camera is pointed along
+        // the positive direction of the Y-axis
+        if (gotRotation) {
+
+            // remap such that the camera is pointing straight down the Y axis
+            SensorManager.remapCoordinateSystem(rotation,
+                    SensorManager.AXIS_X,
+                    SensorManager.AXIS_Z,
+                    cameraRotation);
+
+            SensorManager.getOrientation(cameraRotation, orientation);
+        }
+
+        return orientation;
     }
 
     /**
@@ -208,13 +262,22 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
 
         switch(event.sensor.getType()){
             case Sensor.TYPE_ACCELEROMETER:
+                // Get new value
                 accelData = msg.toString();
+
+                // Get Accelerometer matrix
+                lastAccelerometer = event.values.clone();
                 break;
             case Sensor.TYPE_GYROSCOPE:
                 gyroData = msg.toString();
+
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
+                // Get new value
                 compassData = msg.toString();
+
+                // Get Compass matrix
+                lastCompass = event.values.clone();
                 break;
         }
 
@@ -239,9 +302,6 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
      */
     public Location getLocation() {
         try {
-
-            double latitude; // latitude
-            double longitude; // longitude
 
             // The minimum distance to change Updates in meters
             final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
