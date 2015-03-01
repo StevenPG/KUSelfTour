@@ -159,70 +159,77 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         // Set text properties
-        contentPaint.setTextAlign(Paint.Align.CENTER);
-        contentPaint.setTextSize(20);
+        contentPaint.setTextAlign(Paint.Align.LEFT);
+        contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
 
         // Write text data to the overlay for testing purposes
+        final int left_margin = 15;
         canvas.drawText("DEBUG " +
                 "Width:" + canvas.getWidth() + " " +
                 "Height:" + canvas.getHeight(),
-                canvas.getWidth()/4,
+                canvas.getWidth()/left_margin,
                 canvas.getHeight()/30,
                 contentPaint);
         canvas.drawText(accelData,
-                canvas.getWidth()/2,
-                canvas.getHeight()/6,
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + 28,
                 contentPaint);
         canvas.drawText(compassData,
-                canvas.getWidth()/2,
-                canvas.getHeight()*2/6,
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + (28*2),
                 contentPaint);
         canvas.drawText(gyroData,
-                canvas.getWidth()/2,
-                (canvas.getHeight()*3)/6,
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight())/30 + (28*3),
                 contentPaint);
-        canvas.drawText(lastLocation.getLatitude() + ", " + lastLocation.getLongitude(),
-                canvas.getWidth()/2,
-                (canvas.getHeight()*4)/6,
+        canvas.drawText("Lat:" +
+                lastLocation.getLatitude() +
+                ", Long: " + lastLocation.getLongitude(),
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight())/30 + (28*4),
                 contentPaint);
 
-        // Print orientation
-        float[] orientation= getOrientation();
+        // Get and print orientation
+        float[] orientation = getOrientation();
 
-        canvas.drawText(orientation[0] + " " +
+        canvas.drawText("Orientation: " +
+                orientation[0] + " " +
                 orientation[1] + " " +
                 orientation[2],
-                canvas.getWidth()/2,
-                (canvas.getHeight()*5/6),
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight()/30 + (28*5)),
                 contentPaint);
 
         float curBearingToMW = lastLocation.bearingTo(StevesHouse);
-        canvas.drawText("Bearing for test" + Float.toString(curBearingToMW),
-                canvas.getWidth()/2,
-                (canvas.getHeight()*6)/6,
+        canvas.drawText("Bearing for test: " + Float.toString(curBearingToMW),
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight())/30 + (28*6),
                 contentPaint);
 
-        // Sample drawing of horizon and node at location
+        // Primary Test
         // use roll for screen rotation
-        /*canvas.rotate((float)(0.0f- Math.toDegrees(orientation[2])));
-        // Translate, but normalize for the FOV of the camera -- basically, pixels per degree, times degrees == pixels
-        float dx = (float) ( (canvas.getWidth()/ horizontalFOV) * (Math.toDegrees(orientation[0])-curBearingToMW));
-        float dy = (float) ( (canvas.getHeight()/ verticalFOV) * Math.toDegrees(orientation[1])) ;
+        canvas.rotate((float)(0.0f - Math.toDegrees(orientation[2])));
+
+        // Translate, but normalize for the FOV of the camera
+        float dx = (float) ( (canvas.getWidth()/ ArDisplayView.horizontalFOV) * (Math.toDegrees(orientation[0])-curBearingToMW));
+        float dy = (float) ( (canvas.getHeight()/ ArDisplayView.verticalFOV) * Math.toDegrees(orientation[1])) ;
 
         // wait to translate the dx so the horizon doesn't get pushed off
         canvas.translate(0.0f, 0.0f-dy);
 
-        // make our line big enough to draw regardless of rotation and translation
-        canvas.drawLine(0f - canvas.getHeight(), canvas.getHeight()/2, canvas.getWidth()+canvas.getHeight(), canvas.getHeight()/2, targetPaint);
-
+        // Create a line big enough to draw regardless of rotation and translation
+        canvas.drawLine(0f - canvas.getHeight(),
+                canvas.getHeight()/2,
+                canvas.getWidth()+canvas.getHeight(),
+                canvas.getHeight()/2,
+                contentPaint);
 
         // now translate the dx
         canvas.translate(0.0f-dx, 0.0f);
 
-        // draw our point -- we've rotated and translated this to the right spot already
-        canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 8.0f, targetPaint);
-        */
+        // draw a point
+        canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 8.0f, contentPaint);
     }
 
     /**
