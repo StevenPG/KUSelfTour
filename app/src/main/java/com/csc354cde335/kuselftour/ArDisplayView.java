@@ -29,17 +29,20 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * Deprecated camera object, necessary for backwards compatibility
      */
-    Camera mCamera;
+    public Camera mCamera;
+
+    static public float horizontalFOV;
+    static public float verticalFOV;
 
     /**
      * This field holds reference to the container that contains the SurfaceView
      */
-    SurfaceHolder mHolder;
+    public SurfaceHolder mHolder;
 
     /**
      * The activated activity for the augmented reality view
      */
-    Activity mActivity;
+    public Activity mActivity;
 
     /**
      * Standard required constructor
@@ -74,6 +77,11 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
         // Retrieve camera information for use
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, info);
+
+        // Get camera parameters for later
+        Camera.Parameters params = mCamera.getParameters();
+        horizontalFOV = params.getHorizontalViewAngle();
+        verticalFOV = params.getVerticalViewAngle();
 
         // Compensate for camera rotation
         int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
