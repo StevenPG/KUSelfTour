@@ -52,18 +52,25 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
     String gyroData = "Gyro Data";
 
     /**
+     * String containing last known value of device accelerometer (minus earth gravity)
+     */
+    String linAccelData = "Linear Acceleration Data";
+
+    /**
      * These objects represent each hardware object and their software manager
      */
     SensorManager sensors; // Sensor Manager
     Sensor accelSensor; // measured in m/s^2 ( ex. Earth's gravity is 9.81 m/s^2 )
     Sensor compassSensor; // measured in micro-Teslas (x, y, z) Determine magnetic north
     Sensor gyroSensor; // measured in rotations around each axis in radians per second
+    Sensor linaccelSensor; // accelerator minus earth's gravity
 
     /**
      * Values for calculating device orientation
      */
     float[] lastAccelerometer;
     float[] lastCompass;
+    float[][] printableData; //[0] is accelerator, [1] is compass, and [2] is gyroscope
 
     /**
      * Availability tests for each hardware object
@@ -71,6 +78,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
     boolean isAccelAvailable;
     boolean isCompassAvailable;
     boolean isGyroAvailable;
+    boolean isLinAccelAvailable;
 
     // End SensorEvent Fields --------------------------------------- S
 
@@ -134,6 +142,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         isAccelAvailable = sensors.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL);
         isCompassAvailable = sensors.registerListener(this, compassSensor, SensorManager.SENSOR_DELAY_NORMAL);
         isGyroAvailable = sensors.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        isLinAccelAvailable = sensors.registerListener(this, linaccelSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // Set parameters (Criteria) for GPS hardware
         locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
@@ -149,12 +158,109 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
     // Begin SensorEvent Methods --------------------------------------- S
 
     /**
+     * This draw method overlays important debug information
+     * and can be easily commented out to not be displayed.
+     * Values can be understood better:
+     * http://developer.android.com/reference/android/hardware/SensorEvent.html#values
+     * @param canvas
+     */
+    protected void debugDraw(Canvas canvas){
+        Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        // Easy margin alteration
+        final int left_margin = 15;
+        final int text_size = 28;
+
+        // Set text properties
+        contentPaint.setTextAlign(Paint.Align.LEFT);
+        contentPaint.setTextSize(text_size);
+        contentPaint.setColor(Color.WHITE);
+
+        // Display screen resolution available
+        // Measured in number of pixels horizontally and vertically
+        canvas.drawText("DEBUG " +
+                        "Width:" + canvas.getWidth() + " " +
+                        "Height:" + canvas.getHeight(),
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30,
+                contentPaint);
+
+        // Display accelerometer data
+        /**
+         * Each value is in SI units (m/s^2)
+         *  values[0]: Acceleration minus Gx on the x-axis
+         *  values[1]: Acceleration minus Gy on the y-axis
+         *  values[2]: Acceleration minus Gz on the z-axis
+         *  A sensor of this type measures the acceleration applied to the
+         *  device (Ad). Conceptually, it does so by measuring forces applied
+         *  to the sensor itself (Fs) using the relation:
+         *  In particular, the force of gravity is always influencing the
+         *  measured acceleration:  Ad = -g - ∑F / mass
+         *  For this reason, when the device is sitting on a table
+         *  (and obviously not accelerating), the accelerometer reads
+         *  a magnitude of g = 9.81 m/s^2
+         *  Similarly, when the device is in free-fall and therefore dangerously
+         *  accelerating towards to ground at 9.81 m/s^2, its accelerometer reads a
+         *  magnitude of 0 m/s^2.
+         */
+        canvas.drawText(accelData,
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size,
+                contentPaint);
+        canvas.drawText(linAccelData,
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size * 2,
+                contentPaint);
+
+        // Display compass data
+
+        canvas.drawText(compassData,
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + (text_size*3),
+                contentPaint);
+
+        // Display Gyroscope data
+        canvas.drawText(gyroData,
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight())/30 + (text_size*4),
+                contentPaint);
+
+        // Display GPS Data
+        canvas.drawText("Lat:" +
+                        lastLocation.getLatitude() +
+                        ", Long: " + lastLocation.getLongitude(),
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight())/30 + (text_size*6),
+                contentPaint);
+
+        // Get and print orientation
+        float[] orientation = getOrientation();
+
+        // Display device orientation
+        canvas.drawText("Orientation: " +
+                        orientation[0] + " " +
+                        orientation[1] + " " +
+                        orientation[2],
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight()/30 + (text_size*7)),
+                contentPaint);
+
+        // Display sample bearing towards GPS location
+        float curBearingToMW = lastLocation.bearingTo(StevesHouse);
+        canvas.drawText("Bearing for test: " + Float.toString(curBearingToMW),
+                canvas.getWidth()/left_margin,
+                (canvas.getHeight())/30 + (text_size*8),
+                contentPaint);
+    }
+
+    /**
      * This draw method is what draws data to the screen
      * @param canvas - what surface to draw onto
      */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        debugDraw(canvas);
 
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -163,55 +269,13 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
 
-        // Write text data to the overlay for testing purposes
-        final int left_margin = 15;
-        canvas.drawText("DEBUG " +
-                "Width:" + canvas.getWidth() + " " +
-                "Height:" + canvas.getHeight(),
-                canvas.getWidth()/left_margin,
-                canvas.getHeight()/30,
-                contentPaint);
-        canvas.drawText(accelData,
-                canvas.getWidth()/left_margin,
-                canvas.getHeight()/30 + 28,
-                contentPaint);
-        canvas.drawText(compassData,
-                canvas.getWidth()/left_margin,
-                canvas.getHeight()/30 + (28*2),
-                contentPaint);
-        canvas.drawText(gyroData,
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight())/30 + (28*3),
-                contentPaint);
-        canvas.drawText("Lat:" +
-                lastLocation.getLatitude() +
-                ", Long: " + lastLocation.getLongitude(),
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight())/30 + (28*4),
-                contentPaint);
-
-        // Get and print orientation
-        float[] orientation = getOrientation();
-
-        canvas.drawText("Orientation: " +
-                orientation[0] + " " +
-                orientation[1] + " " +
-                orientation[2],
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight()/30 + (28*5)),
-                contentPaint);
-
-        float curBearingToMW = lastLocation.bearingTo(StevesHouse);
-        canvas.drawText("Bearing for test: " + Float.toString(curBearingToMW),
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight())/30 + (28*6),
-                contentPaint);
-
         // Primary Test
         // use roll for screen rotation
+        float[] orientation = getOrientation();
         canvas.rotate((float)(0.0f - Math.toDegrees(orientation[2])));
 
         // Translate, but normalize for the FOV of the camera
+        float curBearingToMW = lastLocation.bearingTo(StevesHouse);
         float dx = (float) ( (canvas.getWidth()/ ArDisplayView.horizontalFOV) * (Math.toDegrees(orientation[0])-curBearingToMW));
         float dy = (float) ( (canvas.getHeight()/ ArDisplayView.verticalFOV) * Math.toDegrees(orientation[1])) ;
 
@@ -282,7 +346,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // Define text values
+        // Define text values for data usage
         StringBuilder msg = new StringBuilder(event.sensor.getName()).append(" ");
         for(float value: event.values){
             msg.append("[").append(value).append("]");
@@ -292,21 +356,26 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
             case Sensor.TYPE_ACCELEROMETER:
                 // Get new value
                 accelData = msg.toString();
-
                 // Get Accelerometer matrix
                 lastAccelerometer = event.values.clone();
                 break;
+
             case Sensor.TYPE_GYROSCOPE:
                 gyroData = msg.toString();
-
                 break;
+
             case Sensor.TYPE_MAGNETIC_FIELD:
                 // Get new value
                 compassData = msg.toString();
-
                 // Get Compass matrix
                 lastCompass = event.values.clone();
                 break;
+
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                // Get new value
+                linAccelData = msg.toString();
+                break;
+
         }
 
         // Force a redraw of the current view
