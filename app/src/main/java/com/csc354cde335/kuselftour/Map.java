@@ -1,15 +1,14 @@
 package com.csc354cde335.kuselftour;
 
-import android.content.Context;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This class is the base point for the two-dimensional
@@ -19,7 +18,6 @@ import android.widget.TextView;
  * information and/or a destination.
  */
 public class Map extends ActionBarActivity {
-
     GpsTracker gps;
     Double latitude, longitude;
     Double latOffset = 0.000905;
@@ -31,6 +29,7 @@ public class Map extends ActionBarActivity {
         gps = new GpsTracker(this);
 
         Thread t = new Thread() {
+
             @Override
             public void run() {
                 try {
