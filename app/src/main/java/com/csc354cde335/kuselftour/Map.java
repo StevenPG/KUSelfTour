@@ -20,12 +20,40 @@ import android.widget.TextView;
  */
 public class Map extends ActionBarActivity {
 
+    GpsTracker gps;
+    Double latitude, longitude;
+    Double latOffset = 0.000905;
+    Double longOffset = 0.00147;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        Locator coords = new Locator();
-        coords.createFields();
+        gps = new GpsTracker(this);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(5000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                gps = new GpsTracker(Map.this);
+                                latitude = gps.getLatitude();
+                                longitude = gps.getLongitude();
+                                Log.e("Lat", Double.toString(latitude));
+                                Log.e("Long", Double.toString(longitude));
+                                TextView Loc = (TextView)findViewById(R.id.Location);
+                                Loc.setText("Lat:" + Double.toString(latitude - latOffset) + " " + "Long:" + Double.toString(longitude - longOffset));
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        t.start();
     }
 
 
@@ -50,93 +78,4 @@ public class Map extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    // FEEL FREE TO DELETE THE CODE BELOW, EVERYTHING ABOVE THIS POINT IS REQUIRED AND IF YOU DELETE WILL CREATE ERRORS.
-    // EVERYTHING BELOW IS MY LOCATOR IMPLEMENTATION, YOU SHOUOLD PROBABLY JUST BUILD IT INTO THE ACTIVITY, SO DON'T WORRY
-    // ABOUT KEEPING OR USING THIS CLASS, IT MIGHT BE MORE OF A HINDERENCE.
-    // AGAIN, KEEP ABOVE THIS COMMENT, DELETE BELOW
-    // IDE Generated code above (some edits in onCreate() ), Developer code below
-
-    /**
-     * This class is the bare minimum necessary to gain the latitude/longitude
-     * coordinates of the app user.
-     */
-    public class Locator implements LocationListener {
-
-        // Location fields
-        protected LocationManager locationManager;
-        protected LocationListener locationListener;
-        protected Context context;
-        TextView textLatitude;
-        String lat;
-        String provider;
-        protected Double latitude, longitude;
-        protected boolean gps_enabled, network_enabled;
-
-        // Location update constants
-        private int PROXIMITY_UPDATE_DISTANCE = 1; //(meters)
-        private int UPDATE_EVERY_X_TIME = 1; // (milliseconds)
-
-        // Location Methods
-
-        /**
-         * Create fields and begin requesting location updates based on Network Provider
-         * Other Provider: GPS_PROVIDER
-         */
-        public void createFields() {
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    UPDATE_EVERY_X_TIME, PROXIMITY_UPDATE_DISTANCE, this);
-            Log.e("TEST", "Creating fields and requesting location");
-            textLatitude = (TextView) findViewById(R.id.Location);
-        }
-
-        /**
-         * Update location when called
-         * @param location
-         */
-        @Override
-        public void onLocationChanged(Location location) {
-            textLatitude = (TextView) findViewById(R.id.Location);
-
-            // Save the values each time for external use
-            this.latitude = location.getLatitude();
-            this.longitude = location.getLongitude();
-
-            textLatitude.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-            Log.e("TEST", "Updating Location Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-        }
-
-        /**
-         * Run when the provider becomes disabled
-         * @param provider
-         */
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.d("Latitude", "disable");
-        }
-
-        /**
-         * Runs when the Provider is reenabled
-         * @param provider
-         */
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.d("Latitude", "enable");
-        }
-
-        /**
-         * Runs on each status change
-         * @param provider
-         * @param status
-         * @param extras
-         */
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.d("Latitude", "status");
-        }
-
-}
-
 }
