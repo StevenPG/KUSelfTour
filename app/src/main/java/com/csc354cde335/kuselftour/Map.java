@@ -43,8 +43,8 @@ public class Map extends ActionBarActivity {
                                 longitude = gps.getLongitude();
                                 Log.e("Lat", Double.toString(latitude));
                                 Log.e("Long", Double.toString(longitude));
-                                TextView Loc = (TextView)findViewById(R.id.Location);
-                                Loc.setText("Lat:" + Double.toString(latitude - latOffset) + " " + "Long:" + Double.toString(longitude - longOffset));
+                                //TextView Loc = (TextView)findViewById(R.id.Location);
+                                //Loc.setText("Lat:" + Double.toString(latitude - latOffset) + " " + "Long:" + Double.toString(longitude - longOffset));
                             }
                         });
                     }

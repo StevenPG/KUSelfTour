@@ -15,113 +15,62 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.common.GooglePlayServicesClient;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by Steven on 2/28/2015.
  * This class performs displaying of overlaid content
  * using the onDraw method of our view.
- * This class also implements a LocationListener,
- * using the device's GPS to find its location.
  */
-public class OverlayView extends View implements SensorEventListener, LocationListener{
-
-    // Begin Class Fields --------------------------------------- C
+public class OverlayView extends View{
 
     /**
      * The Log.e's Debug tag
      */
     public static final String DEBUG_TAG = "OverlayView Log";
 
-    // End Class Fields --------------------------------------- C
-
-
-    // Begin SensorEvent Fields --------------------------------------- S
+    /**
+     * The sensor data encapsulation object that contains updated sensor data
+     */
+    private SensorData sensors;
 
     /**
-     * String containing last known value of device Accelerometer.
+     * This object is created to update the sensors in the background, unbeknownst
+     * to the API user.
      */
-    String accelData = "Accelerometer Data";
+    private class SensorUpdater implements Runnable {
 
-    /**
-     * String containing last known value of device Compass.
-     */
-    String compassData = "Compass Data";
+        /**
+         * Save the context for sensor access
+         * @param context
+         */
+        private Context thread_context;
 
-    /**
-     * String containing last known value of device Gyroscope.
-     */
-    String gyroData = "Gyro Data";
+        /**
+         * Timer to recreate the sensor object
+         * @param context
+         */
 
-    /**
-     * String containing last known value of device accelerometer (minus earth gravity)
-     */
-    String linAccelData = "Linear Acceleration Data";
+        // Save the context in the constructor
+        public SensorUpdater(Context context){
+            thread_context = context;
+        }
 
-    /**
-     * These objects represent each hardware object and their software manager
-     */
-    SensorManager sensors; // Sensor Manager
-    Sensor accelSensor; // measured in m/s^2 ( ex. Earth's gravity is 9.81 m/s^2 )
-    Sensor compassSensor; // measured in micro-Teslas (x, y, z) Determine magnetic north
-    Sensor gyroSensor; // measured in rotations around each axis in radians per second
-    Sensor linaccelSensor; // accelerator minus earth's gravity
-
-    /**
-     * Values for calculating device orientation
-     */
-    float[] lastAccelerometer;
-    float[] lastCompass;
-    float[][] printableData; //[0] is accelerator, [1] is compass, and [2] is gyroscope
-
-    /**
-     * Availability tests for each hardware object
-     */
-    boolean isAccelAvailable;
-    boolean isCompassAvailable;
-    boolean isGyroAvailable;
-    boolean isLinAccelAvailable;
-
-    // End SensorEvent Fields --------------------------------------- S
-
-
-    // Begin Location Fields --------------------------------------- L
-
-    /**
-     * This field holds the last known location by device hardware
-     */
-    private Location lastLocation = null;
-
-    /**
-     * This location manager manages listening updates
-     */
-    private LocationManager locationManager = null;
-
-    /**
-     * This is a test location for Mt. Washington to test the application
-     * and its associated static class to set definitions
-     */
-    private final static Location mountWashington = new Location("manual");
-    // Static class for packaging convenience with locations
-    static {
-        // Mount Washington is just a test value
-        mountWashington.setLatitude(44.27179d);
-        mountWashington.setLongitude(-71.3039d);
-        mountWashington.setAltitude(1916.5d);
+        // Updater function
+        public void run() {
+            Log.v(DEBUG_TAG, "Thread loop beginning for every 100ms");
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    sensors = new SensorData(thread_context);
+                }
+            }, 100);
+        }
     }
-
-    /**
-     * Another test value, the exact coordinates of my house
-     */
-    private final static Location StevesHouse = new Location("manual");
-    static {
-        StevesHouse.setLatitude(40.1185573);
-        StevesHouse.setLongitude(-75.48192219999999);
-        StevesHouse.setAltitude(51.5112);
-    }
-
-    // End Location Fields --------------------------------------- L
-
-
-    // Begin Class Methods --------------------------------------- C
 
     /**
      * Standard Constructor
@@ -131,31 +80,10 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
      */
     public OverlayView(Context context) {
         super(context);
-
-        // Assign values to the Sensor objects
-        sensors = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        accelSensor = sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        compassSensor = sensors.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        gyroSensor = sensors.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-
-        // Assign listeners to sensor objects
-        isAccelAvailable = sensors.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isCompassAvailable = sensors.registerListener(this, compassSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isGyroAvailable = sensors.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isLinAccelAvailable = sensors.registerListener(this, linaccelSensor, SensorManager.SENSOR_DELAY_NORMAL);
-
-        // Set parameters (Criteria) for GPS hardware
-        locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-
-        // Select a provider and retrieve any location available
-        lastLocation = getLocation();
+        // Begin sensor updates
+        Runnable sensor_updater = new SensorUpdater(context);
+        new Thread(sensor_updater).start();
     }
-
-
-    // End Class Methods --------------------------------------- C
-
-
-    // Begin SensorEvent Methods --------------------------------------- S
 
     /**
      * This draw method overlays important debug information
@@ -186,70 +114,68 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
                 contentPaint);
 
         // Display accelerometer data
-        /**
-         * Each value is in SI units (m/s^2)
-         *  values[0]: Acceleration minus Gx on the x-axis
-         *  values[1]: Acceleration minus Gy on the y-axis
-         *  values[2]: Acceleration minus Gz on the z-axis
-         *  A sensor of this type measures the acceleration applied to the
-         *  device (Ad). Conceptually, it does so by measuring forces applied
-         *  to the sensor itself (Fs) using the relation:
-         *  In particular, the force of gravity is always influencing the
-         *  measured acceleration:  Ad = -g - ∑F / mass
-         *  For this reason, when the device is sitting on a table
-         *  (and obviously not accelerating), the accelerometer reads
-         *  a magnitude of g = 9.81 m/s^2
-         *  Similarly, when the device is in free-fall and therefore dangerously
-         *  accelerating towards to ground at 9.81 m/s^2, its accelerometer reads a
-         *  magnitude of 0 m/s^2.
-         */
-        canvas.drawText(accelData,
+        String[] accelData = sensors.getAccelData();
+        canvas.drawText("Accelerometer Data: m/s^2 along axis",
                 canvas.getWidth()/left_margin,
-                canvas.getHeight()/30 + text_size,
+                canvas.getHeight()/30 + text_size*2,
                 contentPaint);
-        canvas.drawText(linAccelData,
+        canvas.drawText("x: " + accelData[0] + " " +
+                "y: " + accelData[1] + " " +
+                "z: " + accelData[2] + " ",
                 canvas.getWidth()/left_margin,
-                canvas.getHeight()/30 + text_size * 2,
+                canvas.getHeight()/30 + text_size*3,
+                contentPaint);
+
+        // Display Gravity data
+        String[] gravityData = sensors.getGravityData();
+        canvas.drawText("Gravity Data: m/s^2 along axis",
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size*5,
+                contentPaint);
+        canvas.drawText("x: " + gravityData[0] + " " +
+                        "y: " + gravityData[1] + " " +
+                        "z: " + gravityData[2] + " ",
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size*6,
+                contentPaint);
+
+        // Display Linear Acceleration data
+        String[] linAccelData = sensors.getLinAccelData();
+        canvas.drawText("Linear Accelerometer Data: Acceleration - Gravity",
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size*8,
+                contentPaint);
+        canvas.drawText("x: " + linAccelData[0] + " " +
+                        "y: " + linAccelData[1] + " " +
+                        "z: " + linAccelData[2] + " ",
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size*9,
+                contentPaint);
+
+        // Display gyroscope data
+        String[] gyroData = sensors.getGyroData();
+        canvas.drawText("Gyroscope Data: Angular Speed around axis",
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size*11,
+                contentPaint);
+        canvas.drawText("x: " + gyroData[0] + " " +
+                        "y: " + gyroData[1] + " " +
+                        "z: " + gyroData[2] + " ",
+                canvas.getWidth()/left_margin,
+                canvas.getHeight()/30 + text_size*12,
                 contentPaint);
 
         // Display compass data
-
-        canvas.drawText(compassData,
+        String[] compassData = sensors.getCompassData();
+        canvas.drawText("Compass Data: Ambient magnetic field around x",
                 canvas.getWidth()/left_margin,
-                canvas.getHeight()/30 + (text_size*3),
+                canvas.getHeight()/30 + text_size*14,
                 contentPaint);
-
-        // Display Gyroscope data
-        canvas.drawText(gyroData,
+        canvas.drawText("x: " + compassData[0] + " " +
+                        "y: " + compassData[1] + " " +
+                        "z: " + compassData[2] + " ",
                 canvas.getWidth()/left_margin,
-                (canvas.getHeight())/30 + (text_size*4),
-                contentPaint);
-
-        // Display GPS Data
-        canvas.drawText("Lat:" +
-                        lastLocation.getLatitude() +
-                        ", Long: " + lastLocation.getLongitude(),
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight())/30 + (text_size*6),
-                contentPaint);
-
-        // Get and print orientation
-        float[] orientation = getOrientation();
-
-        // Display device orientation
-        canvas.drawText("Orientation: " +
-                        orientation[0] + " " +
-                        orientation[1] + " " +
-                        orientation[2],
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight()/30 + (text_size*7)),
-                contentPaint);
-
-        // Display sample bearing towards GPS location
-        float curBearingToMW = lastLocation.bearingTo(StevesHouse);
-        canvas.drawText("Bearing for test: " + Float.toString(curBearingToMW),
-                canvas.getWidth()/left_margin,
-                (canvas.getHeight())/30 + (text_size*8),
+                canvas.getHeight()/30 + text_size*15,
                 contentPaint);
     }
 
@@ -270,6 +196,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
         contentPaint.setColor(Color.WHITE);
 
         // Primary Test
+        /*
         // use roll for screen rotation
         float[] orientation = getOrientation();
         canvas.rotate((float)(0.0f - Math.toDegrees(orientation[2])));
@@ -294,173 +221,7 @@ public class OverlayView extends View implements SensorEventListener, LocationLi
 
         // draw a point
         canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 8.0f, contentPaint);
-    }
-
-    /**
-     * This function retrieves the devices orientation using hardware devices
-     * @return - device orientation
-     */
-    protected float[] getOrientation(){
-        // Compute the rotation matrix
-        float rotation[] = new float[9];
-        float identity[] = new float[9];
-        boolean gotRotation = SensorManager.getRotationMatrix(rotation,
-                identity, lastAccelerometer, lastCompass);
-
-        // Compute orientation vector
-        if (gotRotation) {
-            // orientation vector
-            float orientation[] = new float[3];
-            SensorManager.getOrientation(rotation, orientation);
-        }
-
-        float cameraRotation[] = new float[9];
-        float orientation[] = new float[3];
-
-        // Remap the rotation matrix so that the camera is pointed along
-        // the positive direction of the Y-axis
-        if (gotRotation) {
-
-            // remap such that the camera is pointing straight down the Y axis
-            SensorManager.remapCoordinateSystem(rotation,
-                    SensorManager.AXIS_X,
-                    SensorManager.AXIS_Z,
-                    cameraRotation);
-
-            SensorManager.getOrientation(cameraRotation, orientation);
-        }
-
-        return orientation;
-    }
-
-    /**
-     * Here we have the view react to sensor changes.
-     * The class is registered for several different changes
-     * so this method may be called for any sensor change.
-     *
-     * This class is saving the sensor data that changed and forcing
-     * the view to update its content by invalidating the view and
-     * forcing it to be redrawn.
-     * @param event - the sensor event to be handled by function
-     */
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-
-        // Define text values for data usage
-        StringBuilder msg = new StringBuilder(event.sensor.getName()).append(" ");
-        for(float value: event.values){
-            msg.append("[").append(value).append("]");
-        }
-
-        switch(event.sensor.getType()){
-            case Sensor.TYPE_ACCELEROMETER:
-                // Get new value
-                accelData = msg.toString();
-                // Get Accelerometer matrix
-                lastAccelerometer = event.values.clone();
-                break;
-
-            case Sensor.TYPE_GYROSCOPE:
-                gyroData = msg.toString();
-                break;
-
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                // Get new value
-                compassData = msg.toString();
-                // Get Compass matrix
-                lastCompass = event.values.clone();
-                break;
-
-            case Sensor.TYPE_LINEAR_ACCELERATION:
-                // Get new value
-                linAccelData = msg.toString();
-                break;
-
-        }
-
-        // Force a redraw of the current view
+        */
         this.invalidate();
     }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // This method has no bearing on the application
-    }
-
-    // End SensorEvent Methods --------------------------------------- S
-
-    // Begin Location Methods --------------------------------------- L
-
-    /**
-     * This function is appropriated from GpsTracker.java
-     * 2/28/2015
-     * Code was drawn from an internet tutorial by Justin Hartz
-     * @return - lastLocation
-     */
-    public Location getLocation() {
-        try {
-
-            // The minimum distance to change Updates in meters
-            final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
-            // The minimum time between updates in milliseconds
-           final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
-
-            // getting GPS status
-            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            // getting network status
-            boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
-                Log.e("TEST", "No Provider Enabled");
-            } else {
-                // First get location from Network Provider
-                if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("Network", "Network");
-                    if (locationManager != null) {
-                        lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    }
-                }
-                // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
-                    if (lastLocation == null) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS Enabled", "GPS Enabled");
-                        if (locationManager != null) {
-                            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return lastLocation;
-    }
-
-    public void onLocationChanged(Location location) {
-        lastLocation = location;
-    }
-    public void onProviderDisabled(String provider) {
-        // ...
-    }
-    public void onProviderEnabled(String provider) {
-        // ...
-    }
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // ...
-    }
-
-    // End Location Methods --------------------------------------- L
 }
