@@ -1,6 +1,7 @@
 package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
+import android.hardware.Sensor;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +31,12 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     /**
      * Debug statement
      */
-    protected static final String DEBUG = "location-updates-test";
+    protected static final String DEBUG = "Debug";
+
+    /**
+     * Static boolean to tell the sensors not to work in the background
+     */
+    protected static boolean paused = false;
 
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
@@ -226,6 +232,9 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
+
+        // Allow sensors to start working again
+        paused = false;
     }
 
     /**
@@ -238,6 +247,15 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         if (mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
         }
+
+        // Set static - unregister sensor listeners to save power
+        Log.v(DEBUG, "Paused: Sensor listeners unregistered");
+        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.accelSensor);
+        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor);
+        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gravitySensor);
+        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gyroSensor);
+        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.compassSensor);
+
     }
 
     /**

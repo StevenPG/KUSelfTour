@@ -17,7 +17,7 @@ import java.util.Arrays;
  */
 public class SensorData implements SensorEventListener {
 
-    private final String SENSORLOG = "SensorDataOutPut";
+    private final String SENSORLOG = "Debug";
 
     /**
      * Array of floats containing the accelerometer data
@@ -47,12 +47,12 @@ public class SensorData implements SensorEventListener {
     /**
      * These objects represent each hardware object and their software manager
      */
-    SensorManager sensors; // Sensor Manager
-    Sensor accelSensor; // measured in m/s^2 ( ex. Earth's gravity is 9.81 m/s^2 )
-    Sensor compassSensor; // measured in micro-Teslas (x, y, z) Determine magnetic north
-    Sensor gyroSensor; // measured in rotations around each axis in radians per second
-    Sensor gravitySensor; // measured in m/s^2
-    Sensor linearAccelSensor; // acceleration sensor - gravity sensor
+    static SensorManager sensors; // Sensor Manager
+    static Sensor accelSensor; // measured in m/s^2 ( ex. Earth's gravity is 9.81 m/s^2 )
+    static Sensor compassSensor; // measured in micro-Teslas (x, y, z) Determine magnetic north
+    static Sensor gyroSensor; // measured in rotations around each axis in radians per second
+    static Sensor gravitySensor; // measured in m/s^2
+    static Sensor linearAccelSensor; // acceleration sensor - gravity sensor
 
     /**
      * Availability tests for each hardware object
@@ -69,6 +69,8 @@ public class SensorData implements SensorEventListener {
      * @param context
      */
     public SensorData(Context context) {
+        Log.v("Log", "Creating sensor object");
+
         // Assign values to the Sensor objects
         sensors = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelSensor = sensors.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -160,7 +162,6 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @param accelData
      * @return
      */
     public float[] interpretLinAccel(float[] linearAccelerationData){
@@ -205,6 +206,7 @@ public class SensorData implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
         switch(event.sensor.getType()){
+
             case Sensor.TYPE_ACCELEROMETER:
                 // Get new value
                 accelerometerData = event.values.clone();

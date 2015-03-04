@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Created by Steven on 3/4/2015.
@@ -12,30 +13,25 @@ import android.os.Bundle;
  * Error: Seems only to load once...
  */
 public class Splash extends Activity {
-    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_screen);
+    }
 
-        Thread welcomeThread = new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    super.run();
-                    sleep(2000);  //Delay of 2 seconds
-                } catch (Exception e) {
-
-                } finally {
-                    context = getApplicationContext();
-                    Intent i = new Intent(context, MainMenu.class);
-                    startActivity(i);
-                    finish();
-                }
-            }
-        };
-        welcomeThread.start();
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.v("test", "Resuming the loading screen");
+        try {
+            Thread.sleep(2000);
+            Log.v("test", "Waited 2 seconds to start main menu");
+            Intent i = new Intent(this, MainMenu.class);
+            startActivity(i);
+            finish();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

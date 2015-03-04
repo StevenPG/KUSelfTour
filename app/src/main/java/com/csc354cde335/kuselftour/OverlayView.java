@@ -23,12 +23,12 @@ public class OverlayView extends View{
     /**
      * The Log.e's Debug tag
      */
-    public static final String DEBUG_TAG = "OverlayView Log";
+    public static final String DEBUG_TAG = "Debug";
 
     /**
      * The sensor data encapsulation object that contains updated sensor data
      */
-    private SensorData sensors;
+    public static SensorData sensorsEventListener;
 
     /**
      * This object is created to update the sensors in the background, unbeknownst
@@ -58,7 +58,7 @@ public class OverlayView extends View{
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    sensors = new SensorData(thread_context);
+                    sensorsEventListener = new SensorData(thread_context);
                 }
             }, 100);
         }
@@ -75,6 +75,7 @@ public class OverlayView extends View{
         // Begin sensor updates
         Runnable sensor_updater = new SensorUpdater(context);
         new Thread(sensor_updater).start();
+
     }
 
     /**
@@ -106,7 +107,7 @@ public class OverlayView extends View{
                 contentPaint);
 
         // Display accelerometer data
-        String[] accelData = sensors.getAccelData();
+        String[] accelData = sensorsEventListener.getAccelData();
         canvas.drawText("Accelerometer Data: m/s^2 along axis",
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*2,
@@ -119,7 +120,7 @@ public class OverlayView extends View{
                 contentPaint);
 
         // Display Gravity data
-        String[] gravityData = sensors.getGravityData();
+        String[] gravityData = sensorsEventListener.getGravityData();
         canvas.drawText("Gravity Data: m/s^2 along axis",
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*5,
@@ -132,7 +133,7 @@ public class OverlayView extends View{
                 contentPaint);
 
         // Display Linear Acceleration data
-        String[] linAccelData = sensors.getLinAccelData();
+        String[] linAccelData = sensorsEventListener.getLinAccelData();
         canvas.drawText("Linear Accelerometer Data: Acceleration - Gravity",
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*8,
@@ -145,7 +146,7 @@ public class OverlayView extends View{
                 contentPaint);
 
         // Display gyroscope data
-        String[] gyroData = sensors.getGyroData();
+        String[] gyroData = sensorsEventListener.getGyroData();
         canvas.drawText("Gyroscope Data: Angular Speed around axis",
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*11,
@@ -158,7 +159,7 @@ public class OverlayView extends View{
                 contentPaint);
 
         // Display compass data
-        String[] compassData = sensors.getCompassData();
+        String[] compassData = sensorsEventListener.getCompassData();
         canvas.drawText("Compass Data: Ambient magnetic field around x",
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*14,

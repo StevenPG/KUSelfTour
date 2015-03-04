@@ -24,7 +24,7 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
     /**
      * Debug tag for Log.e messages
      */
-    public static final String DEBUG_TAG = "ArDisplayView Log";
+    public static final String DEBUG_TAG = "Debug";
 
     /**
      * Deprecated camera object, necessary for backwards compatibility
