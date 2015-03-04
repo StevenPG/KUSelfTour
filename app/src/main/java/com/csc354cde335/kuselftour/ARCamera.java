@@ -1,9 +1,10 @@
 package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
-import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -229,12 +230,19 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         // connection to GoogleApiClient intact.  Here, we resume receiving
         // location updates if the user has requested them.
 
+        Log.v(DEBUG, "Resume: Sensor listeners registered");
+
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
 
-        // Allow sensors to start working again
-        paused = false;
+        if(SensorData.sensors != null) {
+            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.accelSensor, SensorManager.SENSOR_DELAY_UI);
+            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.compassSensor, SensorManager.SENSOR_DELAY_UI);
+            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.gyroSensor, SensorManager.SENSOR_DELAY_UI);
+            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.gravitySensor, SensorManager.SENSOR_DELAY_UI);
+            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor, SensorManager.SENSOR_DELAY_UI);
+        }
     }
 
     /**
@@ -356,7 +364,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
      * Stores activity data in the Bundle.
      */
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
         savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
         savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
