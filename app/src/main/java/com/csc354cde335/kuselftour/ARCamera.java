@@ -308,7 +308,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        Log.v(DEBUG, "Printing Location");
+        Log.v(DEBUG, "Printing Location at" + mLastUpdateTime);
     }
 
     @Override
