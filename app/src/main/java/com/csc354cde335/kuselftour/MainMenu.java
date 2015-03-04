@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 /**
  * Steven Gantz
@@ -24,6 +25,14 @@ public class MainMenu extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+    }
+
+    /**
+     * onStart runs when the activity begins
+     */
+    @Override
+    protected void onStart(){
+        super.onStart();
     }
 
     /**

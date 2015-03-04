@@ -61,7 +61,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     /**
      * Represents a geographical location.
      */
-    protected static Location mCurrentLocation;
+    public static Location mCurrentLocation;
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -72,7 +72,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     /**
      * Time when the location was updated represented as a String.
      */
-    protected String mLastUpdateTime;
+    public static String mLastUpdateTime;
 
     /**
      * Runs when the activity is first instantiated
@@ -187,6 +187,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
+        Log.v(DEBUG,"Starting location updates");
     }
 
     /**
@@ -200,6 +201,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        Log.v(DEBUG, "Stopping location updates");
     }
 
     /**
@@ -267,12 +269,16 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            Log.v(DEBUG, "Retrieving updated location at  " + mLastUpdateTime);
         }
+
+        // Make sure we are connected, then set to true
+        mRequestingLocationUpdates = true;
 
         // If the user presses the Start Updates button before GoogleApiClient connects, we set
         // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
         // the value of mRequestingLocationUpdates and if it is true, we start location updates.
-        if (mRequestingLocationUpdates) {
+        if (mRequestingLocationUpdates){
             startLocationUpdates();
         }
     }
@@ -309,6 +315,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         Log.v(DEBUG, "Printing Location at" + mLastUpdateTime);
+        Log.v(DEBUG, mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude());
     }
 
     @Override

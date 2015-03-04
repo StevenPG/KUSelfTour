@@ -11,6 +11,8 @@ import android.view.View;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.csc354cde335.kuselftour.ARCamera.mLastUpdateTime;
+
 /**
  * Created by Steven on 2/28/2015.
  * This class performs displaying of overlaid content
@@ -86,8 +88,8 @@ public class OverlayView extends View{
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         // Easy margin alteration
-        final int left_margin = 15;
-        final int text_size = 28;
+        final int left_margin = canvas.getWidth()/10;
+        final int text_size = canvas.getHeight()/43;
 
         // Set text properties
         contentPaint.setTextAlign(Paint.Align.LEFT);
@@ -192,6 +194,10 @@ public class OverlayView extends View{
             canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
                     canvas.getWidth()/left_margin,
                     canvas.getHeight()/30 + text_size*21,
+                    contentPaint);
+            canvas.drawText("Last Update @ " + mLastUpdateTime,
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size*22,
                     contentPaint);
         }
     }

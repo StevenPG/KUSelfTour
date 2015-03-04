@@ -78,11 +78,12 @@ public class SensorData implements SensorEventListener {
         linearAccelSensor = sensors.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         // Assign listeners to sensor objects
-        isAccelAvailable = sensors.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isCompassAvailable = sensors.registerListener(this, compassSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isGyroAvailable = sensors.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isGravityAvailable = sensors.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isLinAccelAvailable = sensors.registerListener(this, linearAccelSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        // Use SENSOR_DELAY_UI for now to slow down read rate
+        isAccelAvailable = sensors.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_UI);
+        isCompassAvailable = sensors.registerListener(this, compassSensor, SensorManager.SENSOR_DELAY_UI);
+        isGyroAvailable = sensors.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_UI);
+        isGravityAvailable = sensors.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_UI);
+        isLinAccelAvailable = sensors.registerListener(this, linearAccelSensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     /** Getter methods for important fields as Strings**/
