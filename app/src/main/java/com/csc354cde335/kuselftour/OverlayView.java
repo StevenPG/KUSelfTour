@@ -1,22 +1,12 @@
 package com.csc354cde335.kuselftour;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import com.google.android.gms.common.GooglePlayServicesClient;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,13 +36,12 @@ public class OverlayView extends View{
 
         /**
          * Save the context for sensor access
-         * @param context
          */
         private Context thread_context;
 
         /**
          * Timer to recreate the sensor object
-         * @param context
+         * @param context - activity context
          */
 
         // Save the context in the constructor
@@ -91,7 +80,7 @@ public class OverlayView extends View{
      * and can be easily commented out to not be displayed.
      * Values can be understood better:
      * http://developer.android.com/reference/android/hardware/SensorEvent.html#values
-     * @param canvas
+     * @param canvas - drawing canvas for output
      */
     protected void debugDraw(Canvas canvas){
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -178,6 +167,33 @@ public class OverlayView extends View{
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*15,
                 contentPaint);
+
+        Location currentLocation = ARCamera.mCurrentLocation;
+
+        if(currentLocation != null) {
+            //Log.v(DEBUG_TAG, String.valueOf(ARCamera.mCurrentLocation.getLatitude()));
+            //Log.v(DEBUG_TAG, String.valueOf(ARCamera.mCurrentLocation.getLongitude()));
+            canvas.drawText("GPS Coordinates:",
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size*17,
+                    contentPaint);
+            canvas.drawText("Latitude: " + currentLocation.getLatitude(),
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size*18,
+                    contentPaint);
+            canvas.drawText("Longitude: " + currentLocation.getLongitude(),
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size*19,
+                    contentPaint);
+            canvas.drawText("Provider: " + currentLocation.getProvider(),
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size*20,
+                    contentPaint);
+            canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size*21,
+                    contentPaint);
+        }
     }
 
     /**

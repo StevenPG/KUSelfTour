@@ -61,7 +61,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     /**
      * Represents a geographical location.
      */
-    protected Location mCurrentLocation;
+    protected static Location mCurrentLocation;
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -74,6 +74,10 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
      */
     protected String mLastUpdateTime;
 
+    /**
+     * Runs when the activity is first instantiated
+     * @param savedInstanceState - saved instance
+     */
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +133,6 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
             if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
                 mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
             }
-            updateUI();
         }
     }
 
@@ -187,15 +190,6 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     }
 
     /**
-     * Updates the latitude, the longitude, and the last location time in the UI.
-     */
-    private void updateUI() {
-        if (mCurrentLocation != null) {
-            Log.v(DEBUG, "update-UI");
-        }
-    }
-
-    /**
      * Removes location updates from the FusedLocationApi.
      */
     protected void stopLocationUpdates() {
@@ -208,12 +202,18 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
+    /**
+     * When the activity begins, connect with the GoogleApiClient
+     */
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
     }
 
+    /**
+     * Runs when the activity resumes
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -226,6 +226,9 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         }
     }
 
+    /**
+     * Runs when the activity is temporarily suspended
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -235,6 +238,9 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         }
     }
 
+    /**
+     * Runs when the activity is closed
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -261,7 +267,6 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         if (mCurrentLocation == null) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            updateUI();
         }
 
         // If the user presses the Start Updates button before GoogleApiClient connects, we set
@@ -271,6 +276,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
             startLocationUpdates();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -294,6 +300,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * Callback that fires when the location changes.
      */
@@ -301,7 +308,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
+        Log.v(DEBUG, "Printing Location");
     }
 
     @Override
@@ -323,6 +330,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     /**
      * Stores activity data in the Bundle.
      */
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
         savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
