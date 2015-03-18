@@ -1,14 +1,22 @@
 package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
-import android.hardware.SensorManager;
+import android.graphics.Matrix;
+import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,67 +27,47 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
-/**
- * The ARCamera uses location based augmented reality to showcase information
- * and media in real time using hardware sensors and internet features of a device.
- * ARCamera is the main AR activity, and creates a separate runtime thread to update
- * some fields that are used to record information from the Google Play Services API.
- */
 public class Map extends Activity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
-    /**
-     * Debug statement
-     */
     protected static final String DEBUG = "Debug";
-
-    /**
-     * Static boolean to tell the sensors not to work in the background
-     */
-    protected static boolean paused = false;
-
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-    // Keys for storing activity state in the Bundle.
     protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
     protected final static String LOCATION_KEY = "location-key";
     protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
-
-    /**
-     * Provides the entry point to Google Play services.
-     */
     protected GoogleApiClient mGoogleApiClient;
-
-    /**
-     * Stores parameters for requests to the FusedLocationProviderApi.
-     */
     protected LocationRequest mLocationRequest;
-
-    /**
-     * Represents a geographical location.
-     */
-    public static Location mCurrentLocation;
-
-    /**
-     * Tracks the status of the location updates request. Value changes when the user presses the
-     * Start Updates and Stop Updates buttons.
-     */
     protected Boolean mRequestingLocationUpdates;
 
-    /**
-     * Time when the location was updated represented as a String.
-     */
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+
+    public static final ArrayList<Double> topLeft = new ArrayList<Double>(Arrays.asList(40.516956,-75.790327));
+    public static final ArrayList<Double> topRight = new ArrayList<Double>(Arrays.asList(40.516956,-75.781648));
+    public static final ArrayList<Double> bottomLeft = new ArrayList<Double>(Arrays.asList(40.509559,-75.790327));
+    public static final ArrayList<Double> bottomRight = new ArrayList<Double>(Arrays.asList(40.509559,-75.781648));
+    public static Location mCurrentLocation;
     public static String mLastUpdateTime;
+
+    private boolean onCampus = false;
+    private Display display;
+    private Double longitude;
+    private Double latitude;
+    private Double xDifference;
+    private Double yDifference;
+    private float scale = 1f;
+    private ImageView user;
+    private ImageView map;
+    private int screenHeight;
+    private int screenWidth;
+    private int userHeight;
+    private int userWidth;
+    //private Matrix matrix = new Matrix();
+    private Point size;
+    //private ScaleGestureDetector SGD;
+    private TextView longLat;
 
     /**
      * Runs when the activity is first instantiated
@@ -88,10 +76,10 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arcamera);
+        setContentView(R.layout.activity_map);
 
-        // Add custom views to the FrameLayout control
-        FrameLayout arViewPane = (FrameLayout) findViewById(R.id.ar_view_pane);
+        xDifference = topRight.get(1) - topLeft.get(1);
+        yDifference=  topRight.get(0) - bottomRight.get(0);
 
         // Location Updates
         mRequestingLocationUpdates = false;
@@ -103,6 +91,25 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
         // Kick off the process of building a GoogleApiClient and requesting the LocationServices
         // API.
         buildGoogleApiClient();
+
+        longLat = (TextView)findViewById(R.id.myLocation);
+        user = (ImageView)findViewById(R.id.user);
+        map = (ImageView)findViewById(R.id.northcampus);
+        display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+
+        display.getSize(size);
+        screenHeight = size.y;
+        screenWidth = size.x;
+        // SGD = new ScaleGestureDetector(this, new ScaleListener());
+        userHeight = user.getHeight();
+        userWidth = user.getWidth();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        //SGD.onTouchEvent(ev);
+        return true;
     }
 
     /**
@@ -186,7 +193,7 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
-        Log.v(DEBUG,"Starting location updates");
+        Log.v(DEBUG, "Starting location updates");
     }
 
     /**
@@ -208,8 +215,8 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
      */
     @Override
     protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
+       super.onStart();
+       mGoogleApiClient.connect();
     }
 
     /**
@@ -227,14 +234,6 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
-
-        if(SensorData.sensors != null) {
-            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.accelSensor, SensorManager.SENSOR_DELAY_UI);
-            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.compassSensor, SensorManager.SENSOR_DELAY_UI);
-            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.gyroSensor, SensorManager.SENSOR_DELAY_UI);
-            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.gravitySensor, SensorManager.SENSOR_DELAY_UI);
-            SensorData.sensors.registerListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor, SensorManager.SENSOR_DELAY_UI);
-        }
     }
 
     /**
@@ -247,15 +246,6 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
         if (mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
         }
-
-        // Set static - unregister sensor listeners to save power
-        Log.v(DEBUG, "Paused: Sensor listeners unregistered");
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.accelSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gravitySensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gyroSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.compassSensor);
-
     }
 
     /**
@@ -333,7 +323,24 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         Log.v(DEBUG, "Printing Location at" + mLastUpdateTime);
-        Log.v(DEBUG, mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude());
+
+        latitude= mCurrentLocation.getLatitude();
+        longitude = mCurrentLocation.getLongitude();
+        Log.v(DEBUG, latitude + ", " + longitude);
+
+        longLat.setText(latitude + " & " + longitude);
+        if (isOnCampus() == true) {
+            onCampus = true;
+        } else {
+            onCampus = false;
+        }
+
+        if (onCampus == false) {
+            longLat.setText("You are currently not on campus.");
+        }
+
+        user.setTranslationX((float)calcXLoc());
+        user.setTranslationY((float)calcYLoc());
     }
 
     @Override
@@ -362,4 +369,37 @@ public class Map extends Activity implements ConnectionCallbacks, OnConnectionFa
         savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
         super.onSaveInstanceState(savedInstanceState);
     }
+
+    public boolean isOnCampus() {
+        if (longitude > topRight.get(0) || longitude < bottomRight.get(0) || latitude < topLeft.get(1) || latitude > topRight.get(1)) {
+            return false;
+        }
+        return true;
+    }
+
+    public double calcXLoc(){
+       double userXDifference = longitude - topLeft.get(1);
+       double offset = userXDifference / xDifference;
+       return (screenWidth * offset) - userWidth;
+    }
+
+    public double calcYLoc() {
+        double userYDifference = latitude - bottomLeft.get(0);
+        double offset = userYDifference / yDifference;
+        return (screenHeight * (.95 - offset)) + userHeight + 5;
+    }
+   /* private class ScaleListener extends ScaleGestureDetector.
+            SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scale *= detector.getScaleFactor();
+            scale = Math.max(0.1f, Math.min(scale, 5.0f));
+            matrix.setScale(scale, scale);
+            map.setImageMatrix(matrix);
+            return true;
+        }
+    }*/
 }
+
+
+
