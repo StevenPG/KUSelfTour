@@ -1,6 +1,7 @@
 package com.csc354cde335.kuselftour;
 
 import android.content.Context;
+import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,27 +23,27 @@ public class SensorData implements SensorEventListener {
     /**
      * Array of floats containing the accelerometer data
      */
-    public float[] accelerometerData;
+    public static float[] accelerometerData;
 
     /**
      * Array of floats containing the linear acceleration data
      */
-    public float[] linearAccelerationData;
+    public static float[] linearAccelerationData;
 
     /**
      * Array of floats containing the gravity data
      */
-    public float[] gravityData;
+    public static float[] gravityData;
 
     /**
      * Array of floats containing the compass data
      */
-    public float[] compassData;
+    public static float[] compassData;
 
     /**
      * Array of floats containing the gyroscope data
      */
-    public float[] gyroData;
+    public static float[] gyroData;
 
     /**
      * These objects represent each hardware object and their software manager
@@ -108,6 +109,7 @@ public class SensorData implements SensorEventListener {
         for(int i = 0; i < compassData.length; i++){
             CompassData[i] = Float.toString(compassData[i]);
         }
+
         return CompassData;
     }
     public String[] getGravityData(){
@@ -277,7 +279,6 @@ public class SensorData implements SensorEventListener {
 
                 // Post rounded value
                 //Log.e(SENSORLOG, Arrays.toString(compassData));
-
 
                 break;
          }

@@ -4,10 +4,18 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.hardware.GeomagneticField;
 import android.location.Location;
 import android.util.Log;
 import android.view.View;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,6 +27,11 @@ import static com.csc354cde335.kuselftour.ARCamera.mLastUpdateTime;
  * using the onDraw method of our view.
  */
 public class OverlayView extends View{
+
+    /**
+     * The mapping that holds the necessary data from properties file
+     */
+    Map dictionary = new HashMap();
 
     /**
      * The Log.e's Debug tag
@@ -75,7 +88,6 @@ public class OverlayView extends View{
         // Begin sensor updates
         Runnable sensor_updater = new SensorUpdater(context);
         new Thread(sensor_updater).start();
-
     }
 
     /**
@@ -204,13 +216,122 @@ public class OverlayView extends View{
     }
 
     /**
+     * This method display the distance via gps coordinates from each building
+     */
+    protected void debugBuildingDistance(Canvas canvas){
+        Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        // Easy margin alteration
+        final int left_margin = canvas.getWidth()/10;
+        final int text_size = canvas.getHeight()/43;
+
+        // Set text properties
+        contentPaint.setTextAlign(Paint.Align.LEFT);
+        contentPaint.setTextSize(text_size);
+        contentPaint.setColor(Color.WHITE);
+
+        Location currentLocation = ARCamera.mCurrentLocation;
+        if(currentLocation != null){
+
+            Location[] buildings = new Location[11];
+
+            Location AF = new Location("AF");
+            AF.setLatitude(40.512208); AF.setLongitude(-75.786278);
+            buildings[0] = AF;
+
+            Location Beekey = new Location("Beekey");
+            Beekey.setLatitude(40.515028); Beekey.setLongitude(-75.785800);
+            buildings[1] = Beekey;
+
+            Location Boehm = new Location("Boehm");
+            Boehm.setLatitude(40.511950); Boehm.setLongitude(-75.784617);
+            buildings[2] = Boehm;
+
+            Location deFran = new Location("deFran");
+            deFran.setLatitude(40.514181); deFran.setLongitude(-75.785814);
+            buildings[3] = deFran;
+
+            Location Grim = new Location("Grim");
+            Grim.setLatitude(40.511314); Grim.setLongitude(-75.785797);
+            buildings[4] = Grim;
+
+            Location Lytle = new Location("Lytle");
+            Lytle.setLatitude(40.513233); Lytle.setLongitude(-75.787525);
+            buildings[5] = Lytle;
+
+            Location Rickenbach = new Location("Rickenbach");
+            Rickenbach.setLatitude(40.514400); Rickenbach.setLongitude(-75.784614);
+            buildings[6] = Rickenbach;
+
+            Location Rohrbach = new Location("Rohrbach");
+            Rohrbach.setLatitude(40.513147); Rohrbach.setLongitude(-75.785419);
+            buildings[7] = Rohrbach;
+
+            Location Schaeffer = new Location("Schaeffer");
+            Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
+            buildings[8] = Schaeffer;
+
+            Location Sheridan = new Location("Sheridan");
+            Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
+            buildings[9] = Sheridan;
+
+            Location Old = new Location("Old");
+            Old.setLatitude(40.510250); Old.setLongitude(-75.783061);
+            buildings[10] = Old;
+
+            canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30,
+                    contentPaint);
+
+            canvas.drawText("Last Update @ " + mLastUpdateTime,
+                    canvas.getWidth()/left_margin,
+                    canvas.getHeight()/30 + text_size,
+                    contentPaint);
+
+            // Print all locations and distances
+            for(int i = 0; i < buildings.length; i++){
+                //canvas.drawText("Distance to " + buildings[i].getProvider(),
+                canvas.drawText("Distance to " + buildings[i].getProvider(),
+                    canvas.getWidth() / left_margin,
+                    canvas.getHeight() / 30 + text_size * (i + 3),
+                    contentPaint);
+
+                canvas.drawText(Float.toString(buildings[i].distanceTo(currentLocation)),
+                    canvas.getWidth() / 2,
+                    canvas.getHeight() / 30 + text_size * (i + 3),
+                    contentPaint);
+
+                canvas.drawText("Bearing toward " + buildings[i].getProvider() + ": " + currentLocation.bearingTo(buildings[i]),
+                     canvas.getWidth() / left_margin,
+                     canvas.getHeight() / 2 + text_size * (i + 4),
+                     contentPaint);
+
+                float heading = 0;
+                // DO THIS NEXT
+                // heading is to magnetic north, eg. -10 means 10 degrees to left
+
+                canvas.drawText("Current heading: " + Float.toString(heading),
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 2 + text_size * (16),
+                        contentPaint);
+
+            }
+        }
+        else{
+            Log.v(DEBUG_TAG, "Current location has not yet been found");
+        }
+    }
+
+    /**
      * This draw method is what draws data to the screen
      * @param canvas - what surface to draw onto
      */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        debugDraw(canvas);
+        //debugDraw(canvas);
+        debugBuildingDistance(canvas);
 
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -219,33 +340,6 @@ public class OverlayView extends View{
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
 
-        // Primary Test
-        /*
-        // use roll for screen rotation
-        float[] orientation = getOrientation();
-        canvas.rotate((float)(0.0f - Math.toDegrees(orientation[2])));
-
-        // Translate, but normalize for the FOV of the camera
-        float curBearingToMW = lastLocation.bearingTo(StevesHouse);
-        float dx = (float) ( (canvas.getWidth()/ ArDisplayView.horizontalFOV) * (Math.toDegrees(orientation[0])-curBearingToMW));
-        float dy = (float) ( (canvas.getHeight()/ ArDisplayView.verticalFOV) * Math.toDegrees(orientation[1])) ;
-
-        // wait to translate the dx so the horizon doesn't get pushed off
-        canvas.translate(0.0f, 0.0f-dy);
-
-        // Create a line big enough to draw regardless of rotation and translation
-        canvas.drawLine(0f - canvas.getHeight(),
-                canvas.getHeight()/2,
-                canvas.getWidth()+canvas.getHeight(),
-                canvas.getHeight()/2,
-                contentPaint);
-
-        // now translate the dx
-        canvas.translate(0.0f-dx, 0.0f);
-
-        // draw a point
-        canvas.drawCircle(canvas.getWidth()/2, canvas.getHeight()/2, 8.0f, contentPaint);
-        */
         this.invalidate();
     }
 }
