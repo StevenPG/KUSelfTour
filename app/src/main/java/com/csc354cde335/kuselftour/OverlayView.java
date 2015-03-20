@@ -91,6 +91,91 @@ public class OverlayView extends View{
     }
 
     /**
+     * This function will act as a universal creator of Location lists for easy access and use
+     * @return
+     */
+    private Location[] populateBuildings(){
+        Location[] buildings = new Location[11];
+
+        Location AF = new Location("AF");
+        AF.setLatitude(40.512208); AF.setLongitude(-75.786278);
+        buildings[0] = AF;
+
+        Location Beekey = new Location("Beekey");
+        Beekey.setLatitude(40.515028); Beekey.setLongitude(-75.785800);
+        buildings[1] = Beekey;
+
+        Location Boehm = new Location("Boehm");
+        Boehm.setLatitude(40.511950); Boehm.setLongitude(-75.784617);
+        buildings[2] = Boehm;
+
+        Location deFran = new Location("deFran");
+        deFran.setLatitude(40.514181); deFran.setLongitude(-75.785814);
+        buildings[3] = deFran;
+
+        Location Grim = new Location("Grim");
+        Grim.setLatitude(40.511314); Grim.setLongitude(-75.785797);
+        buildings[4] = Grim;
+
+        Location Lytle = new Location("Lytle");
+        Lytle.setLatitude(40.513233); Lytle.setLongitude(-75.787525);
+        buildings[5] = Lytle;
+
+        Location Rickenbach = new Location("Rickenbach");
+        Rickenbach.setLatitude(40.514400); Rickenbach.setLongitude(-75.784614);
+        buildings[6] = Rickenbach;
+
+        Location Rohrbach = new Location("Rohrbach");
+        Rohrbach.setLatitude(40.513147); Rohrbach.setLongitude(-75.785419);
+        buildings[7] = Rohrbach;
+
+        Location Schaeffer = new Location("Schaeffer");
+        Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
+        buildings[8] = Schaeffer;
+
+        Location Sheridan = new Location("Sheridan");
+        Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
+        buildings[9] = Sheridan;
+
+        Location Old = new Location("Old");
+        Old.setLatitude(40.510250); Old.setLongitude(-75.783061);
+        buildings[10] = Old;
+
+        return buildings;
+    }
+
+    /**
+     *  This function returns a string that represents the closest building to the gps coordinates
+     */
+    private String getClosestBuilding(){
+
+        // Parralel Arrays
+        Location[] buildings = populateBuildings();
+        float[] distanceToBuildings;
+        distanceToBuildings = new float[buildings.length];
+        Float minValue = Float.MAX_VALUE;
+        int minIndex = 0;
+
+        Location currentLocation = ARCamera.mCurrentLocation;
+
+        if(currentLocation != null) {
+            // record minimum distance index value
+            for (int i = 0; i < buildings.length; i++) {
+                distanceToBuildings[i] = currentLocation.distanceTo(buildings[i]);
+                if (distanceToBuildings[i] < minValue) {
+                    minValue = distanceToBuildings[i];
+                    minIndex = i;
+                    // Log.v("Debug", minValue + " " + minIndex);
+                }
+            }
+            //Log.e("Debug", buildings[min].getProvider());
+            return buildings[minIndex].getProvider();
+        }
+        Log.v("Debug", "Failed to find closest building...");
+        return "Failing to find closest building";
+    }
+
+    /**
      * This draw method overlays important debug information
      * and can be easily commented out to not be displayed.
      * Values can be understood better:
@@ -233,51 +318,7 @@ public class OverlayView extends View{
         Location currentLocation = ARCamera.mCurrentLocation;
         if(currentLocation != null){
 
-            Location[] buildings = new Location[11];
-
-            Location AF = new Location("AF");
-            AF.setLatitude(40.512208); AF.setLongitude(-75.786278);
-            buildings[0] = AF;
-
-            Location Beekey = new Location("Beekey");
-            Beekey.setLatitude(40.515028); Beekey.setLongitude(-75.785800);
-            buildings[1] = Beekey;
-
-            Location Boehm = new Location("Boehm");
-            Boehm.setLatitude(40.511950); Boehm.setLongitude(-75.784617);
-            buildings[2] = Boehm;
-
-            Location deFran = new Location("deFran");
-            deFran.setLatitude(40.514181); deFran.setLongitude(-75.785814);
-            buildings[3] = deFran;
-
-            Location Grim = new Location("Grim");
-            Grim.setLatitude(40.511314); Grim.setLongitude(-75.785797);
-            buildings[4] = Grim;
-
-            Location Lytle = new Location("Lytle");
-            Lytle.setLatitude(40.513233); Lytle.setLongitude(-75.787525);
-            buildings[5] = Lytle;
-
-            Location Rickenbach = new Location("Rickenbach");
-            Rickenbach.setLatitude(40.514400); Rickenbach.setLongitude(-75.784614);
-            buildings[6] = Rickenbach;
-
-            Location Rohrbach = new Location("Rohrbach");
-            Rohrbach.setLatitude(40.513147); Rohrbach.setLongitude(-75.785419);
-            buildings[7] = Rohrbach;
-
-            Location Schaeffer = new Location("Schaeffer");
-            Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
-            buildings[8] = Schaeffer;
-
-            Location Sheridan = new Location("Sheridan");
-            Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
-            buildings[9] = Sheridan;
-
-            Location Old = new Location("Old");
-            Old.setLatitude(40.510250); Old.setLongitude(-75.783061);
-            buildings[10] = Old;
+            Location[] buildings = populateBuildings();
 
             canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
                     canvas.getWidth()/left_margin,
@@ -344,7 +385,7 @@ public class OverlayView extends View{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //debugDraw(canvas);
-        //debugBuildingDistance(canvas);
+        debugBuildingDistance(canvas);
 
         // Design logic for showing text on screen at what building you are pointing at within some distance
 
@@ -354,6 +395,15 @@ public class OverlayView extends View{
         contentPaint.setTextAlign(Paint.Align.LEFT);
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
+
+        String closestBuilding = getClosestBuilding();
+        Log.v("Debug", closestBuilding);
+        // Debug Closest building
+        canvas.drawText("Closest building is: " + closestBuilding,
+                canvas.getWidth()/2,
+                canvas.getHeight()/30,
+                contentPaint);
+        // End Closest building debug
 
         this.invalidate();
     }
