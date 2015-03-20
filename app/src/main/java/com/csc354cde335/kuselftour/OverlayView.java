@@ -290,35 +290,48 @@ public class OverlayView extends View{
                     contentPaint);
 
             // Print all locations and distances
-            for(int i = 0; i < buildings.length; i++){
+            for(int i = 0; i < buildings.length; i++) {
                 //canvas.drawText("Distance to " + buildings[i].getProvider(),
                 canvas.drawText("Distance to " + buildings[i].getProvider(),
-                    canvas.getWidth() / left_margin,
-                    canvas.getHeight() / 30 + text_size * (i + 3),
-                    contentPaint);
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 30 + text_size * (i + 3),
+                        contentPaint);
 
                 canvas.drawText(Float.toString(buildings[i].distanceTo(currentLocation)),
-                    canvas.getWidth() / 2,
-                    canvas.getHeight() / 30 + text_size * (i + 3),
-                    contentPaint);
+                        canvas.getWidth() / 2,
+                        canvas.getHeight() / 30 + text_size * (i + 3),
+                        contentPaint);
 
-                canvas.drawText("Bearing toward " + buildings[i].getProvider() + ": " + currentLocation.bearingTo(buildings[i]),
-                     canvas.getWidth() / left_margin,
-                     canvas.getHeight() / 2 + text_size * (i + 4),
-                     contentPaint);
+                // Bearing east of true magnetic north
+                canvas.drawText("Bearing toward " + buildings[i].getProvider() + ": " + (360 - Math.abs(currentLocation.bearingTo(buildings[i]))),
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 2 + text_size * (i + 4),
+                        contentPaint);
 
-                float heading = 0;
-                // DO THIS NEXT
-                // heading is to magnetic north, eg. -10 means 10 degrees to left
-
-                canvas.drawText("Current heading: " + Float.toString(heading),
+                // Pitch when phone is lying flat
+                canvas.drawText("Pitch: " + Float.toString(SensorData.deviceXBearing),
                         canvas.getWidth() / left_margin,
                         canvas.getHeight() / 2 + text_size * (16),
                         contentPaint);
 
+                // Roll when device is lying flat
+                canvas.drawText("Roll: " + Float.toString(SensorData.deviceYBearing),
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 2 + text_size * (17),
+                        contentPaint);
+
+                // Degree direction when device is not lying flat
+                canvas.drawText("Direction: " + Float.toString(SensorData.deviceZBearing),
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 2 + text_size * (18),
+                        contentPaint);
             }
         }
         else{
+            canvas.drawText("Current location has not yet been found",
+                    canvas.getWidth() / left_margin,
+                    canvas.getHeight() / 2 + text_size,
+                    contentPaint);
             Log.v(DEBUG_TAG, "Current location has not yet been found");
         }
     }
@@ -331,7 +344,9 @@ public class OverlayView extends View{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //debugDraw(canvas);
-        debugBuildingDistance(canvas);
+        //debugBuildingDistance(canvas);
+
+        // Design logic for showing text on screen at what building you are pointing at within some distance
 
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 

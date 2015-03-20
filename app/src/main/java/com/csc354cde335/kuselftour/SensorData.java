@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Debug;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -44,6 +45,13 @@ public class SensorData implements SensorEventListener {
      * Array of floats containing the gyroscope data
      */
     public static float[] gyroData;
+
+    /**
+     * This static variable holds the device bearing at each compass reading
+     */
+    public static float deviceYBearing;
+    public static float deviceXBearing;
+    public static float deviceZBearing;
 
     /**
      * These objects represent each hardware object and their software manager
@@ -271,6 +279,25 @@ public class SensorData implements SensorEventListener {
                 // Get new value
                 compassData = event.values.clone();
 
+                // Get bearing from data and save
+                if(accelerometerData != null && compassData != null){
+                    float R[] = new float[9];
+                    float I[] = new float[9];
+                    boolean success = SensorManager.getRotationMatrix(R, I, accelerometerData, compassData);
+                    if (success) {
+                        float orientation[] = new float[3];
+                        SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, I);
+                        SensorManager.getOrientation(I, orientation);
+                        SensorData.deviceZBearing = ((float)Math.toDegrees(orientation[0])+360) % 360;
+                        SensorData.deviceXBearing = ((float)Math.toDegrees(orientation[1])+360) % 360;
+                        SensorData.deviceYBearing = ((float)Math.toDegrees(orientation[2])+360) % 360;
+                        // Log.e("Debug", "Y:" + Float.toString(SensorData.deviceYBearing));
+                        // Log.e("Debug", "X:" + Float.toString(SensorData.deviceXBearing));
+                        // Log.e("Debug", "Z:" + Float.toString(SensorData.deviceZBearing));
+                    }
+                }
+                // End bearing code
+
                 // Pre-rounded value
                 //Log.e(SENSORLOG, Arrays.toString(compassData));
 
@@ -283,26 +310,6 @@ public class SensorData implements SensorEventListener {
                 break;
          }
     }
-
-    // Implement onPause and onResume just to save battery life
-
-    /**
-     @Override
-     protected void onResume() {
-     super.onResume();
-     // for the system's orientation sensor registered listeners
-     mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-     SensorManager.SENSOR_DELAY_GAME);
-     }
-
-     @Override
-     protected void onPause() {
-     super.onPause();
-     // to stop the listener and save battery
-     mSensorManager.unregisterListener(this);
-     }
-
-     */
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
