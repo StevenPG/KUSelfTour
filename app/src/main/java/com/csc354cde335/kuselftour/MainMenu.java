@@ -67,7 +67,7 @@ public class MainMenu extends ActionBarActivity {
     // Automated methods created above
 
     public void openHelp(View view) {
-        Intent intent = new Intent(this, HelpPage.class);
+        Intent intent = new Intent(this, Information.class);
         startActivity(intent);
     }
 

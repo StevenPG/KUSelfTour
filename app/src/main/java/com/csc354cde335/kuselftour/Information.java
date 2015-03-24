@@ -1,24 +1,16 @@
 package com.csc354cde335.kuselftour;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-// Comment
-
-/**
- * The help page will be non-interactive. This activity
- * exists only to assist the user in understanding the
- * usage of the application. All methods below were
- * IDE generated.
- */
-public class HelpPage extends ActionBarActivity {
+public class Information extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_help_page);
+        setContentView(R.layout.activity_information);
     }
 
 
