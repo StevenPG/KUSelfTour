@@ -36,7 +36,7 @@
         android:text="Information"
         android:id="@+id/Information"
 
-        android:onClick="openHelp"
+        android:onClick="openInformation"
         android:layout_below="@+id/MapButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

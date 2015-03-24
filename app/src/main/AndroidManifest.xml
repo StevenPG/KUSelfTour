@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HelpPage"
+            android:name=".Information"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.android" />
