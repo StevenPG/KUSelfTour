@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.location.Location;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ import static com.csc354cde335.kuselftour.ARCamera.mLastUpdateTime;
  * using the onDraw method of our view.
  */
 public class OverlayView extends View{
+
+    // Save context for adding things programatically
+    private Context context;
 
     /**
      * The Log.e's Debug tag
@@ -75,6 +79,7 @@ public class OverlayView extends View{
      */
     public OverlayView(Context context) {
         super(context);
+        this.context = context;
         // Begin sensor updates
         Runnable sensor_updater = new SensorUpdater(context);
         new Thread(sensor_updater).start();
@@ -87,7 +92,7 @@ public class OverlayView extends View{
     private Location[] populateBuildings(){
         Location[] buildings = new Location[11];
 
-        Location AF = new Location("AF");
+        Location AF = new Location("Academic Forum");
         AF.setLatitude(40.512208); AF.setLongitude(-75.786278);
         buildings[0] = AF;
 
@@ -99,7 +104,7 @@ public class OverlayView extends View{
         Boehm.setLatitude(40.511950); Boehm.setLongitude(-75.784617);
         buildings[2] = Boehm;
 
-        Location deFran = new Location("deFran");
+        Location deFran = new Location("deFrancesco");
         deFran.setLatitude(40.514181); deFran.setLongitude(-75.785814);
         buildings[3] = deFran;
 
@@ -115,19 +120,19 @@ public class OverlayView extends View{
         Rickenbach.setLatitude(40.514400); Rickenbach.setLongitude(-75.784614);
         buildings[6] = Rickenbach;
 
-        Location Rohrbach = new Location("Rohrbach");
+        Location Rohrbach = new Location("Rohrbach Library");
         Rohrbach.setLatitude(40.513147); Rohrbach.setLongitude(-75.785419);
         buildings[7] = Rohrbach;
 
-        Location Schaeffer = new Location("Schaeffer");
+        Location Schaeffer = new Location("Schaeffer Auditorium");
         Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
         buildings[8] = Schaeffer;
 
-        Location Sheridan = new Location("Sheridan");
+        Location Sheridan = new Location("Sheridan Art Studio");
         Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
         buildings[9] = Sheridan;
 
-        Location Old = new Location("Old");
+        Location Old = new Location("Old Main");
         Old.setLatitude(40.510250); Old.setLongitude(-75.783061);
         buildings[10] = Old;
 
@@ -355,7 +360,7 @@ public class OverlayView extends View{
 
             Location[] buildings = populateBuildings();
 
-            if(displayDebugInfo == true) {
+            if (displayDebugInfo == true) {
                 canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
                         canvas.getWidth() / left_margin,
                         canvas.getHeight() / 30,
@@ -381,7 +386,7 @@ public class OverlayView extends View{
                             contentPaint);
 
                     canvas.drawText(Float.toString(buildings[i].distanceTo(currentLocation)),
-                            canvas.getWidth() / 2,
+                            (canvas.getWidth() / 3) * 2,
                             canvas.getHeight() / 30 + text_size * (i + 3),
                             contentPaint);
 
@@ -400,8 +405,8 @@ public class OverlayView extends View{
                     String closestBuilding = getClosestBuilding();
                     // Debug Closest building
                     canvas.drawText("Closest building is: " + closestBuilding,
-                            canvas.getWidth()/2,
-                            canvas.getHeight()/30,
+                            canvas.getWidth() / 2,
+                            canvas.getHeight() / 30,
                             contentPaint);
                     // End Closest building debug
                 }
@@ -422,14 +427,46 @@ public class OverlayView extends View{
             contentPaint.setTextSize(100);
             contentPaint.setColor(Color.WHITE);
 
-            if(!facedBuilding.getProvider().equals("NA")) {
-                canvas.drawText(facedBuilding.getProvider(),
-                        canvas.getWidth() / 2,
-                        canvas.getHeight() / 2,
-                        contentPaint);
-                Log.e(DEBUG_TAG, "Show building: " + facedBuilding.getProvider());
-            }
+            if (!facedBuilding.getProvider().equals("NA")) {
+                // Break into whitespace and print each on new line
+                String[] splitText = facedBuilding.getProvider().split("\\s+");
+                switch(splitText.length){
+                    case 1:{
+                        canvas.drawText(splitText[0],
+                                canvas.getWidth() / 2,
+                                (canvas.getHeight() / 10) * 5,
+                                contentPaint);
+                        break;
+                    }
 
+                    case 2:{
+                        canvas.drawText(splitText[0],
+                                canvas.getWidth() / 2,
+                                (canvas.getHeight() / 10) * 5,
+                                contentPaint);
+                        canvas.drawText(splitText[1],
+                                canvas.getWidth() / 2,
+                                (canvas.getHeight() / 10) * 6,
+                                contentPaint);
+                        break;
+                    }
+                    case 3:{
+                        canvas.drawText(splitText[0],
+                                canvas.getWidth() / 2,
+                                (canvas.getHeight() / 10) * 5,
+                                contentPaint);
+                        canvas.drawText(splitText[1],
+                                canvas.getWidth() / 2,
+                                (canvas.getHeight() / 10) * 6,
+                                contentPaint);
+                        canvas.drawText(splitText[2],
+                                canvas.getWidth() / 2,
+                                (canvas.getHeight() / 10) * 7,
+                                contentPaint);
+                        break;
+                    }
+                }
+            }
         }
         else{
             canvas.drawText("Current location has not yet been found",
