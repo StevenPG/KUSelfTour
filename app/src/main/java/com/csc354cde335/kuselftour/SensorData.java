@@ -1,15 +1,11 @@
 package com.csc354cde335.kuselftour;
 
 import android.content.Context;
-import android.hardware.GeomagneticField;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Debug;
 import android.util.Log;
-
-import java.util.Arrays;
 
 /**
  * Created by Steven on 3/2/2015.
@@ -18,8 +14,6 @@ import java.util.Arrays;
  * which updates data on a separate thread.
  */
 public class SensorData implements SensorEventListener {
-
-    private final String SENSORLOG = "Debug";
 
     /**
      * Array of floats containing the accelerometer data
@@ -75,7 +69,7 @@ public class SensorData implements SensorEventListener {
     /**
      * It is in the constructor that the sensors are initialized and listeners
      * are registered to them for the lifetime of the object.
-     * @param context
+     * @param context - activity context
      */
     public SensorData(Context context) {
         Log.v("Log", "Creating sensor object");
@@ -140,8 +134,8 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @param accelData
-     * @return
+     * @param accelData - accelerometer data
+     * @return - returns rounded accelerometer values
      */
     public float[] interpretAccelerometer(float[] accelData){
         float[] roundedValues = new float[accelData.length];
@@ -156,8 +150,8 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @param gravityData
-     * @return
+     * @param gravityData - gravity data
+     * @return - returns rounded gravity data
      */
     public float[] interpretGravity(float[] gravityData){
         float[] roundedValues = new float[gravityData.length];
@@ -172,7 +166,7 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @return
+     * @return - returns linear acceleration rounded values
      */
     public float[] interpretLinAccel(float[] linearAccelerationData){
         float[] roundedValues = new float[linearAccelerationData.length];
@@ -210,7 +204,7 @@ public class SensorData implements SensorEventListener {
 
     /**
      * This function manually updates the data fields stored in the class.
-     * @param event
+     * @param event - sensor event that occurs next in the queue
      */
     @Override
     public void onSensorChanged(SensorEvent event) {

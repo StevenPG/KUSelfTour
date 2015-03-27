@@ -3,10 +3,11 @@ package com.csc354cde335.kuselftour;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.Switch;
 
 /**
  * Steven Gantz
@@ -16,15 +17,18 @@ import android.widget.FrameLayout;
 
 public class MainMenu extends ActionBarActivity {
 
+    public static boolean isDebugOn;
+
     /**
      * Override oncreate of activity
      * (Runs when the MainMenu class is initially created)
-     * @param savedInstanceState
+     * @param savedInstanceState - last instance of this class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        isDebugOn = false;
     }
 
     /**
@@ -38,8 +42,8 @@ public class MainMenu extends ActionBarActivity {
     /**
      * Runs when the options menu is created
      * (Top right corner)
-     * @param menu
-     * @return
+     * @param menu - pass the menu
+     * @return - returns options successfully created
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,5 +83,17 @@ public class MainMenu extends ActionBarActivity {
     public void openMap(View view) {
         Intent intent = new Intent(this, Map.class);
         startActivity(intent);
+    }
+
+    public void onDebugClick(View view){
+        Switch debugSwitch = (Switch) findViewById(R.id.DebugSwitch);
+        if(debugSwitch.isChecked()){
+            Log.e("DEBUG", "debug is true");
+            isDebugOn = true;
+        }
+        else{
+            Log.e("DEBUG", "debug is false");
+            isDebugOn = false;
+        }
     }
 }

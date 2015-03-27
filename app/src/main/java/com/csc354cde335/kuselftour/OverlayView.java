@@ -4,18 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.hardware.GeomagneticField;
 import android.location.Location;
 import android.util.Log;
 import android.view.View;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,11 +22,6 @@ import static com.csc354cde335.kuselftour.ARCamera.mLastUpdateTime;
  * using the onDraw method of our view.
  */
 public class OverlayView extends View{
-
-    /**
-     * The mapping that holds the necessary data from properties file
-     */
-    Map dictionary = new HashMap();
 
     /**
      * The Log.e's Debug tag
@@ -92,7 +82,7 @@ public class OverlayView extends View{
 
     /**
      * This function will act as a universal creator of Location lists for easy access and use
-     * @return
+     * @return - returns list of buildings with information
      */
     private Location[] populateBuildings(){
         Location[] buildings = new Location[11];
@@ -173,6 +163,28 @@ public class OverlayView extends View{
         }
         Log.v("Debug", "Failed to find closest building...");
         return "Failing to find closest building";
+    }
+
+    /**
+     * This getClosestBuilding method takes a list of available buildings
+     */
+    protected Location getClosestBuilding(Location currentLocation, ArrayList buildingsBeingFaced){
+
+        Location closestBuilding = new Location("NA");
+        if(buildingsBeingFaced.size() > 0) {
+            closestBuilding = (Location) buildingsBeingFaced.get(0);
+            for (int i = 0; i < buildingsBeingFaced.size(); i++) {
+                // Get distance to closest building
+                Float closestSoFar = currentLocation.distanceTo(closestBuilding);
+                // Get distance to current building and test
+                Float maybeCloser = currentLocation.distanceTo((Location) buildingsBeingFaced.get(i));
+                if (maybeCloser < closestSoFar) {
+                    closestBuilding = (Location) buildingsBeingFaced.get(i);
+                }
+            }
+        }
+
+        return closestBuilding;
     }
 
     /**
@@ -301,13 +313,36 @@ public class OverlayView extends View{
     }
 
     /**
-     * This method display the distance via gps coordinates from each building
+     * This will return a list of all of the buildings the device is within 10 degrees of looking at
      */
-    protected void debugBuildingDistance(Canvas canvas){
+    protected Location getListOfBuildingsDeviceIsFacingAndPrint(Location currentLocation, Location [] buildings, Float currentDirection){
+        ArrayList<Location> buildingsBeingFaced = new ArrayList();
+
+        for (Location building : buildings) {
+            Float buildingBearing = 360 - Math.abs(currentLocation.bearingTo(building));
+            Float facingBuilding = buildingBearing - currentDirection;
+            if (facingBuilding <= 10 && facingBuilding >= -10) {
+                /*Log.e(DEBUG_TAG, "Facing " + buildings[i]);
+                Log.e(DEBUG_TAG, Float.toString(currentLocation.bearingTo(buildings[i])));
+                Log.e(DEBUG_TAG, Float.toString(currentDirection));
+                */
+                buildingsBeingFaced.add(building);
+                // Log.e(DEBUG_TAG, "Adding building to faced list " + buildings[i].getProvider());
+            }
+        }
+        return getClosestBuilding(currentLocation, buildingsBeingFaced);
+    }
+
+    /**
+     * This method will draw what building the user is looking at within 15 degrees
+     * @param canvas - what surface to draw onto
+     * @param displayDebugInfo - whether to display debug information
+     */
+    protected void displayBuilding(Canvas canvas, boolean displayDebugInfo){
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         // Easy margin alteration
-        final int left_margin = canvas.getWidth()/10;
+        final int left_margin = canvas.getWidth()/4;
         final int text_size = canvas.getHeight()/43;
 
         // Set text properties
@@ -316,56 +351,77 @@ public class OverlayView extends View{
         contentPaint.setColor(Color.WHITE);
 
         Location currentLocation = ARCamera.mCurrentLocation;
-        if(currentLocation != null){
+        if(currentLocation != null) {
 
             Location[] buildings = populateBuildings();
 
-            canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
-                    canvas.getWidth()/left_margin,
-                    canvas.getHeight()/30,
-                    contentPaint);
-
-            canvas.drawText("Last Update @ " + mLastUpdateTime,
-                    canvas.getWidth()/left_margin,
-                    canvas.getHeight()/30 + text_size,
-                    contentPaint);
-
-            // Print all locations and distances
-            for(int i = 0; i < buildings.length; i++) {
-                //canvas.drawText("Distance to " + buildings[i].getProvider(),
-                canvas.drawText("Distance to " + buildings[i].getProvider(),
+            if(displayDebugInfo == true) {
+                canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
                         canvas.getWidth() / left_margin,
-                        canvas.getHeight() / 30 + text_size * (i + 3),
+                        canvas.getHeight() / 30,
                         contentPaint);
 
-                canvas.drawText(Float.toString(buildings[i].distanceTo(currentLocation)),
+                canvas.drawText("Last Update @ " + mLastUpdateTime,
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 30 + text_size,
+                        contentPaint);
+
+                String currentTime = DateFormat.getTimeInstance().format(new Date());
+                canvas.drawText("Current Time: " + currentTime,
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 30 + text_size * 2,
+                        contentPaint);
+
+                // Print all locations and distances
+                for (int i = 0; i < buildings.length; i++) {
+                    //canvas.drawText("Distance to " + buildings[i].getProvider(),
+                    canvas.drawText("Distance to " + buildings[i].getProvider(),
+                            canvas.getWidth() / left_margin,
+                            canvas.getHeight() / 30 + text_size * (i + 3),
+                            contentPaint);
+
+                    canvas.drawText(Float.toString(buildings[i].distanceTo(currentLocation)),
+                            canvas.getWidth() / 2,
+                            canvas.getHeight() / 30 + text_size * (i + 3),
+                            contentPaint);
+
+                    // Bearing east of true magnetic north
+                    canvas.drawText("Bearing toward " + buildings[i].getProvider() + ": " + (360 - Math.abs(currentLocation.bearingTo(buildings[i]))),
+                            canvas.getWidth() / left_margin,
+                            canvas.getHeight() / 2 + text_size * (i + 8),
+                            contentPaint);
+
+                    // Degree direction when device is not lying flat
+                    canvas.drawText("Direction: " + Float.toString(SensorData.deviceZBearing),
+                            canvas.getWidth() / left_margin,
+                            canvas.getHeight() / 2 + text_size * (22),
+                            contentPaint);
+
+                    String closestBuilding = getClosestBuilding();
+                    // Debug Closest building
+                    canvas.drawText("Closest building is: " + closestBuilding,
+                            canvas.getWidth()/2,
+                            canvas.getHeight()/30,
+                            contentPaint);
+                    // End Closest building debug
+                }
+            }
+
+            // This code runs whether displayDebugInfo is true or not
+            // It is based on whether a location has been found
+            Location facedBuilding = getListOfBuildingsDeviceIsFacingAndPrint(currentLocation, buildings, SensorData.deviceZBearing);
+
+            // Reset text properties for main text
+            contentPaint.setTextAlign(Paint.Align.CENTER);
+            contentPaint.setTextSize(100);
+            contentPaint.setColor(Color.WHITE);
+
+            if(!facedBuilding.getProvider().equals("NA")) {
+                canvas.drawText(facedBuilding.getProvider(),
                         canvas.getWidth() / 2,
-                        canvas.getHeight() / 30 + text_size * (i + 3),
+                        canvas.getHeight() / 2,
                         contentPaint);
-
-                // Bearing east of true magnetic north
-                canvas.drawText("Bearing toward " + buildings[i].getProvider() + ": " + (360 - Math.abs(currentLocation.bearingTo(buildings[i]))),
-                        canvas.getWidth() / left_margin,
-                        canvas.getHeight() / 2 + text_size * (i + 4),
-                        contentPaint);
-
-                // Pitch when phone is lying flat
-                canvas.drawText("Pitch: " + Float.toString(SensorData.deviceXBearing),
-                        canvas.getWidth() / left_margin,
-                        canvas.getHeight() / 2 + text_size * (16),
-                        contentPaint);
-
-                // Roll when device is lying flat
-                canvas.drawText("Roll: " + Float.toString(SensorData.deviceYBearing),
-                        canvas.getWidth() / left_margin,
-                        canvas.getHeight() / 2 + text_size * (17),
-                        contentPaint);
-
-                // Degree direction when device is not lying flat
-                canvas.drawText("Direction: " + Float.toString(SensorData.deviceZBearing),
-                        canvas.getWidth() / left_margin,
-                        canvas.getHeight() / 2 + text_size * (18),
-                        contentPaint);
+                Log.e(DEBUG_TAG, "Show building: " + facedBuilding.getProvider());
             }
         }
         else{
@@ -384,10 +440,15 @@ public class OverlayView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        // Debug text
         //debugDraw(canvas);
-        debugBuildingDistance(canvas);
+        //debugBuildingDistance(canvas);
+
+        // Pass a boolean as second argument depending on whether debug info should be seen or not
+        displayBuilding(canvas, MainMenu.isDebugOn);
 
         // Design logic for showing text on screen at what building you are pointing at within some distance
+
 
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -395,15 +456,6 @@ public class OverlayView extends View{
         contentPaint.setTextAlign(Paint.Align.LEFT);
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
-
-        String closestBuilding = getClosestBuilding();
-        Log.v("Debug", closestBuilding);
-        // Debug Closest building
-        canvas.drawText("Closest building is: " + closestBuilding,
-                canvas.getWidth()/2,
-                canvas.getHeight()/30,
-                contentPaint);
-        // End Closest building debug
 
         this.invalidate();
     }

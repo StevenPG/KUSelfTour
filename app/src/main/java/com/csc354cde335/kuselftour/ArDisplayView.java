@@ -45,7 +45,7 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * Standard required constructor
-     * @param context
+     * @param context - activity context
      *
      */
     public ArDisplayView(Context context, Activity activity) {
@@ -67,7 +67,7 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
      * based on the current orientation of the device (so that the camera
      * preview always displays right-side up), and call the setPreviewDisplay()
      * method to tie the Camera preview to our SurfaceHolder.
-     * @param holder
+     * @param holder - the surface that the camera is being shown on
      */
     public void surfaceCreated(SurfaceHolder holder){
         // Activate Camera hardware
@@ -108,10 +108,10 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
      * Next, we set the camera preview format, commit the camera
      * parameter changes, and finally call the startPreview()
      * method to begin displaying the camera preview within our surface.
-     * @param holder
-     * @param format
-     * @param width
-     * @param height
+     * @param holder - screen
+     * @param format - screen format
+     * @param width - screen width
+     * @param height - screen height
      */
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
     {
@@ -134,7 +134,7 @@ public class ArDisplayView extends SurfaceView implements SurfaceHolder.Callback
 
     /**
      * Here we shut down the camera preview and release the Camera resources.
-     * @param holder
+     * @param holder - holds the screen object
      */
     public void surfaceDestroyed(SurfaceHolder holder) {
         mCamera.stopPreview();

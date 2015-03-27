@@ -35,11 +35,6 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     protected static final String DEBUG = "Debug";
 
     /**
-     * Static boolean to tell the sensors not to work in the background
-     */
-    protected static boolean paused = false;
-
-    /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -257,13 +252,14 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         }
 
         // Set static - unregister sensor listeners to save power
-        Log.v(DEBUG, "Paused: Sensor listeners unregistered");
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.accelSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gravitySensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gyroSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.compassSensor);
-
+        if(SensorData.sensors != null) {
+            Log.v(DEBUG, "Paused: Sensor listeners unregistered");
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.accelSensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gravitySensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gyroSensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.compassSensor);
+        }
     }
 
     /**
@@ -304,9 +300,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         // If the user presses the Start Updates button before GoogleApiClient connects, we set
         // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
         // the value of mRequestingLocationUpdates and if it is true, we start location updates.
-        if (mRequestingLocationUpdates){
-            startLocationUpdates();
-        }
+        startLocationUpdates();
     }
 
 
