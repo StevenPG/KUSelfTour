@@ -405,6 +405,12 @@ public class OverlayView extends View{
                             contentPaint);
                     // End Closest building debug
                 }
+
+                // Print GPS info
+                canvas.drawText(currentLocation.getLatitude() + ", " + currentLocation.getLongitude(),
+                        canvas.getWidth() / left_margin,
+                        canvas.getHeight() / 30 + text_size * 14,
+                        contentPaint);
             }
 
             // This code runs whether displayDebugInfo is true or not
@@ -423,6 +429,7 @@ public class OverlayView extends View{
                         contentPaint);
                 Log.e(DEBUG_TAG, "Show building: " + facedBuilding.getProvider());
             }
+
         }
         else{
             canvas.drawText("Current location has not yet been found",
