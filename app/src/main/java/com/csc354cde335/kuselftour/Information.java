@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ExpandableListView;
 
 public class Information extends Activity {
@@ -27,6 +28,20 @@ public class Information extends Activity {
 
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
 
+        /**
+         * The following is a test to display to lori what the error was
+         */
+        {
+            if(expListView == null){
+                Log.e("DEBUG", "The list view is null, and therefore" +
+                        "calling setAdapter will fail with a null pointer exception");
+                System.exit(-1);
+            }
+            else{
+                Log.e("DEBUG", "ListView is not null");
+            }
+        }
+
         // setting list adapter
         expListView.setAdapter(listAdapter);
     }
@@ -35,8 +50,8 @@ public class Information extends Activity {
      * Preparing the list data
      */
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
         // Adding child data
         listDataHeader.add("Top 250");
@@ -44,7 +59,7 @@ public class Information extends Activity {
         listDataHeader.add("Coming Soon..");
 
         // Adding child data
-        List<String> top250 = new ArrayList<String>();
+        List<String> top250 = new ArrayList<>();
         top250.add("The Shawshank Redemption");
         top250.add("The Godfather");
         top250.add("The Godfather: Part II");
@@ -53,7 +68,7 @@ public class Information extends Activity {
         top250.add("The Dark Knight");
         top250.add("12 Angry Men");
 
-        List<String> nowShowing = new ArrayList<String>();
+        List<String> nowShowing = new ArrayList<>();
         nowShowing.add("The Conjuring");
         nowShowing.add("Despicable Me 2");
         nowShowing.add("Turbo");
@@ -61,7 +76,7 @@ public class Information extends Activity {
         nowShowing.add("Red 2");
         nowShowing.add("The Wolverine");
 
-        List<String> comingSoon = new ArrayList<String>();
+        List<String> comingSoon = new ArrayList<>();
         comingSoon.add("2 Guns");
         comingSoon.add("The Smurfs 2");
         comingSoon.add("The Spectacular Now");
