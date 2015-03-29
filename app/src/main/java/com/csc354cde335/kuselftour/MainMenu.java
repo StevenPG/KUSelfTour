@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 
 /**
@@ -37,6 +38,22 @@ public class MainMenu extends ActionBarActivity {
     @Override
     protected void onStart(){
         super.onStart();
+    }
+
+    /**
+     * OnResume runs each time this activity is brought back (also runs on first startup)
+     */
+    @Override
+    protected void onResume(){
+        super.onResume();
+        // If debug is on
+        Button infoButton = (Button) findViewById(R.id.Information);
+        if(!isDebugOn){
+           infoButton.setVisibility(View.GONE);
+        }
+        else{
+            infoButton.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

@@ -427,6 +427,7 @@ public class OverlayView extends View{
             contentPaint.setTextSize(100);
             contentPaint.setColor(Color.WHITE);
 
+            // Only run if facing a building
             if (!facedBuilding.getProvider().equals("NA")) {
                 // Break into whitespace and print each on new line
                 String[] splitText = facedBuilding.getProvider().split("\\s+");
@@ -466,6 +467,9 @@ public class OverlayView extends View{
                         break;
                     }
                 }
+
+                // After printing, display a clickable button
+
             }
         }
         else{
