@@ -21,6 +21,7 @@ import android.widget.Switch;
 public class MainMenu extends ActionBarActivity {
 
     public static boolean isDebugOn;
+    public boolean allowDebug;
 
     public static int FieldOfView;
 
@@ -33,6 +34,10 @@ public class MainMenu extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        // CHANGE THIS TO ALLOW FOR DEBUGGING OR NOT
+        allowDebug = true;
+
         isDebugOn = false;
         FieldOfView = 15;
         // If debug is on
@@ -42,6 +47,11 @@ public class MainMenu extends ActionBarActivity {
         }
         else{
             infoButton.setVisibility(View.VISIBLE);
+        }
+        // Deny or allow debugging
+        if(!allowDebug){
+            Switch debugSwitch = (Switch) findViewById(R.id.DebugSwitch);
+            debugSwitch.setVisibility(View.GONE);
         }
     }
 
@@ -79,7 +89,7 @@ public class MainMenu extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_menu, menu);
-        return true;
+        return false;
     }
 
     @Override
