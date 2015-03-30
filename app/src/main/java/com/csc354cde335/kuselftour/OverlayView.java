@@ -24,7 +24,9 @@ import static com.csc354cde335.kuselftour.ARCamera.mLastUpdateTime;
  */
 public class OverlayView extends View{
 
-    // Save context for adding things programatically
+    /**
+     *  Save context for adding things programatically
+     */
     private Context context;
 
     /**
@@ -326,7 +328,7 @@ public class OverlayView extends View{
         for (Location building : buildings) {
             Float buildingBearing = 360 - Math.abs(currentLocation.bearingTo(building));
             Float facingBuilding = buildingBearing - currentDirection;
-            if (facingBuilding <= 10 && facingBuilding >= -10) {
+            if (facingBuilding <= MainMenu.FieldOfView && facingBuilding >= -(MainMenu.FieldOfView) ) {
                 /*Log.e(DEBUG_TAG, "Facing " + buildings[i]);
                 Log.e(DEBUG_TAG, Float.toString(currentLocation.bearingTo(buildings[i])));
                 Log.e(DEBUG_TAG, Float.toString(currentDirection));
@@ -385,7 +387,13 @@ public class OverlayView extends View{
                             canvas.getHeight() / 30 + text_size * (i + 3),
                             contentPaint);
 
-                    canvas.drawText(Float.toString(buildings[i].distanceTo(currentLocation)),
+                    // Change meters into km
+                    Double distance = Double.valueOf(buildings[i].distanceTo(currentLocation) / 1000);
+                    // Change km to mi
+                    distance = Double.valueOf(distance * .621371);
+                    // String dist = Double.toString(distance);
+                    String dist = String.format("%4.3f", distance);
+                    canvas.drawText(dist + " mi",
                             (canvas.getWidth() / 3) * 2,
                             canvas.getHeight() / 30 + text_size * (i + 3),
                             contentPaint);
@@ -399,7 +407,7 @@ public class OverlayView extends View{
                     // Degree direction when device is not lying flat
                     canvas.drawText("Direction: " + Float.toString(SensorData.deviceZBearing),
                             canvas.getWidth() / left_margin,
-                            canvas.getHeight() / 2 + text_size * (22),
+                            canvas.getHeight() / 2 + text_size * (19),
                             contentPaint);
 
                     String closestBuilding = getClosestBuilding();

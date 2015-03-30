@@ -1,6 +1,7 @@
 package com.csc354cde335.kuselftour;
 
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Switch;
 
 /**
@@ -20,6 +22,8 @@ public class MainMenu extends ActionBarActivity {
 
     public static boolean isDebugOn;
 
+    public static int FieldOfView;
+
     /**
      * Override oncreate of activity
      * (Runs when the MainMenu class is initially created)
@@ -30,6 +34,15 @@ public class MainMenu extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         isDebugOn = false;
+        FieldOfView = 15;
+        // If debug is on
+        Button infoButton = (Button) findViewById(R.id.Information);
+        if(!isDebugOn){
+            infoButton.setVisibility(View.GONE);
+        }
+        else{
+            infoButton.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -49,7 +62,7 @@ public class MainMenu extends ActionBarActivity {
         // If debug is on
         Button infoButton = (Button) findViewById(R.id.Information);
         if(!isDebugOn){
-           infoButton.setVisibility(View.GONE);
+            infoButton.setVisibility(View.GONE);
         }
         else{
             infoButton.setVisibility(View.VISIBLE);
@@ -89,6 +102,7 @@ public class MainMenu extends ActionBarActivity {
 
     public void openInformation(View view) {
         Intent intent = new Intent(this, Information.class);
+        intent.putExtra("selected", "Sharadin");
         startActivity(intent);
     }
 
@@ -111,6 +125,14 @@ public class MainMenu extends ActionBarActivity {
         else{
             Log.e("DEBUG", "debug is false");
             isDebugOn = false;
+        }
+        // If debug is on, show the button, else hide the button
+        Button infoButton = (Button) findViewById(R.id.Information);
+        if(!isDebugOn){
+            infoButton.setVisibility(View.GONE);
+        }
+        else{
+            infoButton.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -18,7 +18,7 @@ public class Information extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_information);
 
         // get the list view
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
@@ -27,20 +27,6 @@ public class Information extends Activity {
         prepareListData();
 
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-
-        /**
-         * The following is a test to display to lori what the error was
-         */
-        {
-            if(expListView == null){
-                Log.e("DEBUG", "The list view is null, and therefore" +
-                        "calling setAdapter will fail with a null pointer exception");
-                System.exit(-1);
-            }
-            else{
-                Log.e("DEBUG", "ListView is not null");
-            }
-        }
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
