@@ -1,13 +1,17 @@
 package com.csc354cde335.kuselftour;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -345,7 +349,7 @@ public class OverlayView extends View{
      * @param canvas - what surface to draw onto
      * @param displayDebugInfo - whether to display debug information
      */
-    protected void displayBuilding(Canvas canvas, boolean displayDebugInfo){
+    protected Location displayBuilding(Canvas canvas, boolean displayDebugInfo){
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         // Easy margin alteration
@@ -362,7 +366,7 @@ public class OverlayView extends View{
 
             Location[] buildings = populateBuildings();
 
-            if (displayDebugInfo == true) {
+            if (displayDebugInfo) {
                 canvas.drawText("Accuracy: " + currentLocation.getAccuracy() + " meters",
                         canvas.getWidth() / left_margin,
                         canvas.getHeight() / 30,
@@ -388,9 +392,9 @@ public class OverlayView extends View{
                             contentPaint);
 
                     // Change meters into km
-                    Double distance = Double.valueOf(buildings[i].distanceTo(currentLocation) / 1000);
+                    Double distance = (double) (buildings[i].distanceTo(currentLocation) / 1000);
                     // Change km to mi
-                    distance = Double.valueOf(distance * .621371);
+                    distance = distance * .621371;
                     // String dist = Double.toString(distance);
                     String dist = String.format("%4.3f", distance);
                     canvas.drawText(dist + " mi",
@@ -477,7 +481,7 @@ public class OverlayView extends View{
                 }
 
                 // After printing, display a clickable button
-
+                return facedBuilding;
             }
         }
         else{
@@ -487,6 +491,7 @@ public class OverlayView extends View{
                     contentPaint);
             Log.v(DEBUG_TAG, "Current location has not yet been found");
         }
+        return new Location("NA");
     }
 
     /**
@@ -501,10 +506,9 @@ public class OverlayView extends View{
         //debugBuildingDistance(canvas);
 
         // Pass a boolean as second argument depending on whether debug info should be seen or not
-        displayBuilding(canvas, MainMenu.isDebugOn);
+        final Location shownBuilding = displayBuilding(canvas, MainMenu.isDebugOn);
 
         // Design logic for showing text on screen at what building you are pointing at within some distance
-
 
         Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -513,6 +517,28 @@ public class OverlayView extends View{
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
 
+        this.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e("debug", "touched");
+                Log.e("debug", shownBuilding.getProvider());
+                if(!"NA".equals(shownBuilding.getProvider())) {
+                    startInfoActivity(shownBuilding.getProvider());
+                }
+                return false;
+            }
+        });
+
         this.invalidate();
+    }
+
+    /**
+     * Start Info Activity
+     */
+    public void startInfoActivity(String buildingName){
+        Intent intent = new Intent(context, Information.class);
+        intent.putExtra("selected", buildingName);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.context.startActivity(intent);
     }
 }

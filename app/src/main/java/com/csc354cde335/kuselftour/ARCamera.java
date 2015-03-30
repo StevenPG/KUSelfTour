@@ -1,6 +1,7 @@
 package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -82,8 +84,8 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
      */
    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arcamera);
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_arcamera);
 
        // Add custom views to the FrameLayout control
        FrameLayout arViewPane = (FrameLayout) findViewById(R.id.ar_view_pane);
@@ -100,13 +102,13 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
        buildGoogleApiClient();
 
        // Display camera preview
-       ArDisplayView arDisplay = new ArDisplayView(this,this);
+       ArDisplayView arDisplay = new ArDisplayView(this, this);
        arViewPane.addView(arDisplay);
 
        // Add the custom overlay to the ARCamera activity and view pane
        OverlayView arContent = new OverlayView(getApplicationContext());
        arViewPane.addView(arContent);
-    }
+   }
 
     /**
      * Updates fields based on data stored in the bundle.
@@ -353,6 +355,14 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         Log.i(DEBUG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
+    /**
+     * Start the information activity
+     */
+    public void startInfoActivity(String buildingName){
+        Intent intent = new Intent(this, Information.class);
+        intent.putExtra("selected", buildingName);
+        startActivity(intent);
+    }
 
     /**
      * Stores activity data in the Bundle.
