@@ -134,7 +134,7 @@ public class OverlayView extends View{
         Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
         buildings[8] = Schaeffer;
 
-        Location Sheridan = new Location("Sheridan Art Studio");
+        Location Sheridan = new Location("Sharadan Art Studio");
         Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
         buildings[9] = Sheridan;
 
