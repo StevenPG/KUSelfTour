@@ -1,0 +1,34 @@
+Resources:
+
+For each of us that intends to code:
+  - Android Studio download (required for android programming)
+    - http://developer.android.com/sdk/index.html
+  - How to use GitHub in sync with Android Studio (ie. not step on eachother's toes coding together)
+    - http://www.londonappdeveloper.com/how-to-use-git-hub-with-android-studio/
+
+Android Programming Resources:
+  - Augmented Reality Resources (Referred by Android Developers online):
+    - Unity3d Mobile links
+      - http://docs.unity3d.com/Manual/android-GettingStarted.html
+      - https://unity3d.com/unity/multiplatform/mobile
+    - Vuforia SDK v3.0 
+      - https://developer.vuforia.com/resources/sdk/android
+    - Vuforia Dev Guide
+      - https://developer.vuforia.com/resources/dev-guide/getting-started-unity-extension
+      - https://developer.vuforia.com/resources/dev-guide/unity-android-plugins
+    - Vuforia and Unity Tutorial
+      - http://www.3pillarglobal.com/insights/how-to-create-an-augmented-reality-app
+      - http://www.dannygoodayle.com/2013/03/01/making-your-first-project-with-unity-and-augmented-reality/
+      - http://www.marcofolio.net/other/introduction_into_augmented_reality_with_vuforia.html
+      
+  Augmented Reality Example:
+    - https://www.youtube.com/watch?v=23_sboxOH34
+    - https://www.youtube.com/watch?v=665waHAeA1k (Directly Applicable to our project)-------------------------WATCH ME
+      - Uses Unity3d + Vuforia
+      
+  - AR Explanation/Tutorial (minus library use, concept only)
+    - http://code.tutsplus.com/tutorials/augmented-reality-getting-started-on-android--mobile-4457
+      
+Class/Professor-Based Resources:
+  - josh-miller.com/teamproject/
+  - faculty.kutztown.edu/parson/spring2015/CSC354Spring2015.html
