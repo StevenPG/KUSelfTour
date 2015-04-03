@@ -1,70 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.csc354cde335.kuselftour.Map">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-  <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:src="@drawable/northcampus"
-        android:id="@+id/northcampus"
-        android:scaleType="fitXY"
-      android:adjustViewBounds="true"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/user"
-        android:id="@+id/user"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Latitude &amp; Longitude"
-        android:id="@+id/myLocation"
-        android:textColor="#ffffff"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:text="\?"
-        android:id="@+id/help"
+        android:text="H"
+        android:id="@+id/home"
+        android:layout_gravity="center_horizontal"
+        android:textSize="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/northcampus"
-        android:layout_alignEnd="@+id/help"
-        android:textSize="50px"
+        android:layout_toLeftOf="@+id/camera"
+        android:layout_toStartOf="@+id/camera"
         android:background="@android:drawable/btn_default" />
 
     <Button
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:text="C"
-        android:id="@+id/c"
-        android:textSize="50px"
-        android:layout_alignTop="@+id/help"
-        android:layout_toLeftOf="@+id/help"
-        android:layout_toStartOf="@+id/help"
+        android:id="@+id/camera"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="30dp"
         android:background="@android:drawable/btn_default" />
 
-    <Button
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:text="H"
-        android:id="@+id/h"
-        android:textSize="50px"
-        android:background="@android:drawable/btn_default"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/c"
-        android:layout_toStartOf="@+id/c" />
 
 </RelativeLayout>

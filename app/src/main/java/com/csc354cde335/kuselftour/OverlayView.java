@@ -219,7 +219,7 @@ public class OverlayView extends View{
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
 
-        // Primary Test
+        // Primary Map
         /*
         // use roll for screen rotation
         float[] orientation = getOrientation();
