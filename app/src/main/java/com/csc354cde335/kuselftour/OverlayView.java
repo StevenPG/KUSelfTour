@@ -233,8 +233,8 @@ public class OverlayView extends View{
                 canvas.getHeight()/30 + text_size*2,
                 contentPaint);
         canvas.drawText("x: " + accelData[0] + " " +
-                "y: " + accelData[1] + " " +
-                "z: " + accelData[2] + " ",
+                        "y: " + accelData[1] + " " +
+                        "z: " + accelData[2] + " ",
                 canvas.getWidth()/left_margin,
                 canvas.getHeight()/30 + text_size*3,
                 contentPaint);
@@ -517,28 +517,6 @@ public class OverlayView extends View{
         contentPaint.setTextSize(28);
         contentPaint.setColor(Color.WHITE);
 
-        // Primary Map
-        // use roll for screen rotation
-        float[] orientation = getOrientation();
-        canvas.rotate((float)(0.0f - Math.toDegrees(orientation[2])));
-
-        // Translate, but normalize for the FOV of the camera
-        float curBearingToMW = lastLocation.bearingTo(StevesHouse);
-        float dx = (float) ( (canvas.getWidth()/ ArDisplayView.horizontalFOV) * (Math.toDegrees(orientation[0])-curBearingToMW));
-        float dy = (float) ( (canvas.getHeight()/ ArDisplayView.verticalFOV) * Math.toDegrees(orientation[1])) ;
-
-        // wait to translate the dx so the horizon doesn't get pushed off
-        canvas.translate(0.0f, 0.0f-dy);
-
-        // Create a line big enough to draw regardless of rotation and translation
-        canvas.drawLine(0f - canvas.getHeight(),
-                canvas.getHeight()/2,
-                canvas.getWidth()+canvas.getHeight(),
-                canvas.getHeight()/2,
-                contentPaint);
-
-        // now translate the dx
-        canvas.translate(0.0f-dx, 0.0f);
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -550,6 +528,7 @@ public class OverlayView extends View{
                 return false;
             }
         });
+
         this.invalidate();
     }
 
