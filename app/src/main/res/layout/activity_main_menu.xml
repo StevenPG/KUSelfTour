@@ -33,14 +33,27 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Help"
-        android:id="@+id/HelpButton"
+        android:text="Information"
+        android:id="@+id/Information"
 
-        android:onClick="openHelp"
+        android:onClick="openInformation"
         android:layout_below="@+id/MapButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="41dp"
         android:textSize="18dp" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Debug"
+        android:id="@+id/DebugSwitch"
+        android:checked="false"
+        android:enabled="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onDebugClick"
+        android:clickable="true" />
 
 </RelativeLayout>

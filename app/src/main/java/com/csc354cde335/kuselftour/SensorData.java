@@ -7,8 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-import java.util.Arrays;
-
 /**
  * Created by Steven on 3/2/2015.
  * This class is an encapsulation of the sensor data retrieved
@@ -17,32 +15,37 @@ import java.util.Arrays;
  */
 public class SensorData implements SensorEventListener {
 
-    private final String SENSORLOG = "Debug";
-
     /**
      * Array of floats containing the accelerometer data
      */
-    public float[] accelerometerData;
+    public static float[] accelerometerData;
 
     /**
      * Array of floats containing the linear acceleration data
      */
-    public float[] linearAccelerationData;
+    public static float[] linearAccelerationData;
 
     /**
      * Array of floats containing the gravity data
      */
-    public float[] gravityData;
+    public static float[] gravityData;
 
     /**
      * Array of floats containing the compass data
      */
-    public float[] compassData;
+    public static float[] compassData;
 
     /**
      * Array of floats containing the gyroscope data
      */
-    public float[] gyroData;
+    public static float[] gyroData;
+
+    /**
+     * This static variable holds the device bearing at each compass reading
+     */
+    public static float deviceYBearing;
+    public static float deviceXBearing;
+    public static float deviceZBearing;
 
     /**
      * These objects represent each hardware object and their software manager
@@ -66,7 +69,7 @@ public class SensorData implements SensorEventListener {
     /**
      * It is in the constructor that the sensors are initialized and listeners
      * are registered to them for the lifetime of the object.
-     * @param context
+     * @param context - activity context
      */
     public SensorData(Context context) {
         Log.v("Log", "Creating sensor object");
@@ -108,6 +111,7 @@ public class SensorData implements SensorEventListener {
         for(int i = 0; i < compassData.length; i++){
             CompassData[i] = Float.toString(compassData[i]);
         }
+
         return CompassData;
     }
     public String[] getGravityData(){
@@ -130,8 +134,8 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @param accelData
-     * @return
+     * @param accelData - accelerometer data
+     * @return - returns rounded accelerometer values
      */
     public float[] interpretAccelerometer(float[] accelData){
         float[] roundedValues = new float[accelData.length];
@@ -146,8 +150,8 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @param gravityData
-     * @return
+     * @param gravityData - gravity data
+     * @return - returns rounded gravity data
      */
     public float[] interpretGravity(float[] gravityData){
         float[] roundedValues = new float[gravityData.length];
@@ -162,7 +166,7 @@ public class SensorData implements SensorEventListener {
      * by defining what exactly is being shown and putting it out for readability.
      * Units are measured in meters per second squared ( m/s^2 )
      * This function will apply a low-pass filter by rounding off the lower values
-     * @return
+     * @return - returns linear acceleration rounded values
      */
     public float[] interpretLinAccel(float[] linearAccelerationData){
         float[] roundedValues = new float[linearAccelerationData.length];
@@ -200,7 +204,7 @@ public class SensorData implements SensorEventListener {
 
     /**
      * This function manually updates the data fields stored in the class.
-     * @param event
+     * @param event - sensor event that occurs next in the queue
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -269,6 +273,25 @@ public class SensorData implements SensorEventListener {
                 // Get new value
                 compassData = event.values.clone();
 
+                // Get bearing from data and save
+                if(accelerometerData != null && compassData != null){
+                    float R[] = new float[9];
+                    float I[] = new float[9];
+                    boolean success = SensorManager.getRotationMatrix(R, I, accelerometerData, compassData);
+                    if (success) {
+                        float orientation[] = new float[3];
+                        SensorManager.remapCoordinateSystem(R, SensorManager.AXIS_X, SensorManager.AXIS_Z, I);
+                        SensorManager.getOrientation(I, orientation);
+                        SensorData.deviceZBearing = ((float)Math.toDegrees(orientation[0])+360) % 360;
+                        SensorData.deviceXBearing = ((float)Math.toDegrees(orientation[1])+360) % 360;
+                        SensorData.deviceYBearing = ((float)Math.toDegrees(orientation[2])+360) % 360;
+                        // Log.e("Debug", "Y:" + Float.toString(SensorData.deviceYBearing));
+                        // Log.e("Debug", "X:" + Float.toString(SensorData.deviceXBearing));
+                        // Log.e("Debug", "Z:" + Float.toString(SensorData.deviceZBearing));
+                    }
+                }
+                // End bearing code
+
                 // Pre-rounded value
                 //Log.e(SENSORLOG, Arrays.toString(compassData));
 
@@ -278,30 +301,9 @@ public class SensorData implements SensorEventListener {
                 // Post rounded value
                 //Log.e(SENSORLOG, Arrays.toString(compassData));
 
-
                 break;
          }
     }
-
-    // Implement onPause and onResume just to save battery life
-
-    /**
-     @Override
-     protected void onResume() {
-     super.onResume();
-     // for the system's orientation sensor registered listeners
-     mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-     SensorManager.SENSOR_DELAY_GAME);
-     }
-
-     @Override
-     protected void onPause() {
-     super.onPause();
-     // to stop the listener and save battery
-     mSensorManager.unregisterListener(this);
-     }
-
-     */
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

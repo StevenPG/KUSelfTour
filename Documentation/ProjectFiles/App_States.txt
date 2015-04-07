@@ -1,0 +1,39 @@
+There is a finite number of states the application can be in, these 
+should be documented here without specific feature information.
+* - Requires design
+
+Ex:
+State:
+  - requirement (added note)
+  - requirement (added note)
+
+Possible States (in no particular order):
+-----------------------------------------
+
+Loading Screen: 
+  * - (possible) Loading Bar
+  * - Logo
+  - Any other neccesary information
+  
+Augmented Reality Visual: (possibly done completely using Vuforia/Unity3D)
+  * - camera view design (ie. buttons)
+  * - options/menus (if neccesary)
+  - Augmented Reality integration with camera
+
+Map Visual: (non-essential at this point)
+  - pan and zoomable map
+  - Shows image of person based on location
+  * - designed visual map (not static GoogleEarth type map)
+  - location tracking (non-essential feature at this point)
+  - clickable buildings (non-essential feature at this point)
+  
+Main Menu:
+  * - Logo
+  * - Augmented reality option (need name)
+  * - Map option (need name)
+  * - Settings option (if applicable)
+  * - Help option (if applicable, non-essential feature at this point)
+  
+Settings Page: (if applicable)
+
+Help: (if applicable, non-essential feature at this point)  

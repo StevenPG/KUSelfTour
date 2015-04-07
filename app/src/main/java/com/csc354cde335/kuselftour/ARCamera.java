@@ -1,6 +1,7 @@
 package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,11 +36,6 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
      * Debug statement
      */
     protected static final String DEBUG = "Debug";
-
-    /**
-     * Static boolean to tell the sensors not to work in the background
-     */
-    protected static boolean paused = false;
 
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
@@ -87,8 +85,8 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
      */
    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arcamera);
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_arcamera);
 
        // Add custom views to the FrameLayout control
        FrameLayout arViewPane = (FrameLayout) findViewById(R.id.ar_view_pane);
@@ -105,13 +103,13 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
        buildGoogleApiClient();
 
        // Display camera preview
-       ArDisplayView arDisplay = new ArDisplayView(this,this);
+       ArDisplayView arDisplay = new ArDisplayView(this, this);
        arViewPane.addView(arDisplay);
 
        // Add the custom overlay to the ARCamera activity and view pane
        OverlayView arContent = new OverlayView(getApplicationContext());
        arViewPane.addView(arContent);
-    }
+   }
 
     /**
      * Updates fields based on data stored in the bundle.
@@ -257,13 +255,14 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         }
 
         // Set static - unregister sensor listeners to save power
-        Log.v(DEBUG, "Paused: Sensor listeners unregistered");
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.accelSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gravitySensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gyroSensor);
-        SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.compassSensor);
-
+        if(SensorData.sensors != null) {
+            Log.v(DEBUG, "Paused: Sensor listeners unregistered");
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.accelSensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.linearAccelSensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gravitySensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.gyroSensor);
+            SensorData.sensors.unregisterListener(OverlayView.sensorsEventListener, SensorData.compassSensor);
+        }
     }
 
     /**
@@ -304,9 +303,7 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         // If the user presses the Start Updates button before GoogleApiClient connects, we set
         // mRequestingLocationUpdates to true (see startUpdatesButtonHandler()). Here, we check
         // the value of mRequestingLocationUpdates and if it is true, we start location updates.
-        if (mRequestingLocationUpdates){
-            startLocationUpdates();
-        }
+        startLocationUpdates();
     }
 
 
@@ -359,6 +356,14 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
         Log.i(DEBUG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
+    /**
+     * Start the information activity
+     */
+    public void startInfoActivity(String buildingName){
+        Intent intent = new Intent(this, Information.class);
+        intent.putExtra("selected", buildingName);
+        startActivity(intent);
+    }
 
     /**
      * Stores activity data in the Bundle.

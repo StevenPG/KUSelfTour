@@ -1,0 +1,1 @@
+This folder will be where images are stored for use. Should be easily reachable by each of us.
