@@ -42,33 +42,45 @@ public class Map extends Activity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        // Initialize two main buttons on the Map activity
         Button home = (Button)findViewById(R.id.home);
         Button camera = (Button)findViewById(R.id.camera);
 
+        // Initilize the Building locations and the button listeners
         initializeBuildingLocations();
         initializeButtonListeners(camera, home);
 
-        //Initialize map
+        // Initialize map
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(final GoogleMap map) {
+        // Location of the center of the norts side of Kutztown University's north campus
         LatLng kutztown = new LatLng(40.513266, -75.785965);
 
+        // Place the overlay image onto the map
         final GroundOverlayOptions kuMap = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.northcampus))
                 .positionFromBounds(kubounds);
         map.addGroundOverlay(kuMap);
+
+        // Allow the user to find their location
         map.setMyLocationEnabled(true);
+
+        // Put the gogole maps camera over the center of north campus and set its zoom level to 17
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(kutztown, 17));
+
+        // Handle when the map is clicked
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                // Initialize what activity the app should go to in the case that a buliding is clicked
                 Intent i = new Intent(getApplicationContext(), Information.class);
-                Log.d("TEST", "click: " + latLng.latitude + ", " + latLng.longitude);
 
+                // Test whether a building was clicked
+                // If a building was clicked send the building name to the new activity and start the activity
                 String selected = testBuildingClicked(latLng.latitude, latLng.longitude);
                 if (!selected.equals("")) {
                     i.putExtra("selected", selected);
@@ -77,12 +89,17 @@ public class Map extends Activity implements OnMapReadyCallback {
             }
         });
 
+        // Handle when the camera moves
+        // If the user trys to zoom in or out too far it will put it back tot he closest allowable bounds
+        // If the user trys to move the camera too far away from campus it will put it back the the
+        //    closest allowable longitude/latitude that are within the set bounds
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d("TEST", "CHANGE: " + cameraPosition.zoom);
                 boolean zoomChange = false;
                 boolean locChange = false;
+
+                // Test if the zoom is ok
                 Float zoom = cameraPosition.zoom;
                 if (cameraPosition.zoom > MIN_ZOOM) {
                     zoom = MIN_ZOOM;
@@ -91,10 +108,12 @@ public class Map extends Activity implements OnMapReadyCallback {
                     zoom = MAX_ZOOM;
                     zoomChange = true;
                 }
+                // End zoom test
 
                 double lon = cameraPosition.target.longitude;
                 double lat = cameraPosition.target.latitude;
 
+                // Test if the location is okay
                 if (cameraPosition.target.longitude > kubounds.northeast.longitude) {
                     lon = kubounds.northeast.longitude - CAMERA_BORDER;
                     locChange = true;
@@ -116,11 +135,13 @@ public class Map extends Activity implements OnMapReadyCallback {
                 if (zoomChange) {
                     map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
                 }
+                // End location test
             }
         });
     }
 
     private void initializeBuildingLocations() {
+        // Initilize the bounds of each building to be used to see if the user clicked any buildings
         af.put("ne", new ArrayList<>(Arrays.asList(40.512530, -75.785973)));
         af.put("sw", new ArrayList<>(Arrays.asList(40.511943, -75.786777)));
         beekey.put("ne", new ArrayList<>(Arrays.asList(40.515348, -75.785399)));
@@ -150,6 +171,7 @@ public class Map extends Activity implements OnMapReadyCallback {
     }
 
     private void initializeButtonListeners(Button camera, Button home) {
+        // If the home building is clicked go to the Main Menu activity
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +180,7 @@ public class Map extends Activity implements OnMapReadyCallback {
             }
         });
 
+        // If the camera button is clicked go to the ARCamera activity
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,83 +190,71 @@ public class Map extends Activity implements OnMapReadyCallback {
         });
     }
 
+    // Test whether the user clicked a building or not
     private String testBuildingClicked(Double latitude, Double longitude) {
         String selected = "";
         if (latitude > af.get("sw").get(0) && latitude < af.get("ne").get(0)) {
             if (longitude > af.get("sw").get(1) && longitude < af.get("ne").get(1)) {
-                Log.d("TEST", "click af");
                 selected = KUSelfTourConstants.AF;
             }
         }
         if (latitude > beekey.get("sw").get(0) && latitude < beekey.get("ne").get(0)) {
             if (longitude > beekey.get("sw").get(1) && longitude < beekey.get("ne").get(1)) {
-                Log.d("TEST", "click beekey");
                 selected = KUSelfTourConstants.BEEKEY;
             }
         }
         if (latitude > boehm.get("sw").get(0) && latitude < boehm.get("ne").get(0)) {
             if (longitude > boehm.get("sw").get(1) && longitude < boehm.get("ne").get(1)) {
-                Log.d("TEST", "click boehm");
                 selected = KUSelfTourConstants.BOEHM;
             }
         }
         if (latitude > defran.get("sw").get(0) && latitude < defran.get("ne").get(0)) {
             if (longitude > defran.get("sw").get(1) && longitude < defran.get("ne").get(1)) {
-                Log.d("TEST", "click defran");
                 selected = KUSelfTourConstants.DEFRANCESCO;
             }
         }
         if (latitude > gradcenter.get("sw").get(0) && latitude < gradcenter.get("ne").get(0)) {
             if (longitude > gradcenter.get("sw").get(1) && longitude < gradcenter.get("ne").get(1)) {
-                Log.d("TEST", "click gradcenter");
                 selected = KUSelfTourConstants.GRAD_CENTER;
             }
         }
         if (latitude > grim.get("sw").get(0) && latitude < grim.get("ne").get(0)) {
             if (longitude > grim.get("sw").get(1) && longitude < grim.get("ne").get(1)) {
-                Log.d("TEST", "click grim");
                 selected = KUSelfTourConstants.GRIM;
             }
         }
         if (latitude > lytle.get("sw").get(0) && latitude < lytle.get("ne").get(0)) {
             if (longitude > lytle.get("sw").get(1) && longitude < lytle.get("ne").get(1)) {
-                Log.d("TEST", "click lytle");
                 selected = KUSelfTourConstants.LYTLE;
             }
         }
         if (latitude > rickenbach.get("sw").get(0) && latitude < rickenbach.get("ne").get(0)) {
             if (longitude > rickenbach.get("sw").get(1) && longitude < rickenbach.get("ne").get(1)) {
-                Log.d("TEST", "click rickenbach");
                 selected = KUSelfTourConstants.RICKENBACH;
             }
         }
         if (latitude > rohrbach.get("sw").get(0) && latitude < rohrbach.get("ne").get(0)) {
             if (longitude > rohrbach.get("sw").get(1) && longitude < rohrbach.get("ne").get(1)) {
-                Log.d("TEST", "click rhorbach");
                 selected = KUSelfTourConstants.ROHRBACH;
             }
         }
         if (latitude > schaeffer.get("sw").get(0) && latitude < schaeffer.get("ne").get(0)) {
             if (longitude > schaeffer.get("sw").get(1) && longitude < schaeffer.get("ne").get(1)) {
-                Log.d("TEST", "click schaeffer");
                 selected = KUSelfTourConstants.SCHAEFFER_AUDITORIUM;
             }
         }
         if (latitude > sheridan.get("sw").get(0) && latitude < sheridan.get("ne").get(0)) {
             if (longitude > sheridan.get("sw").get(1) && longitude < sheridan.get("ne").get(1)) {
-                Log.d("TEST", "click sheridan");
                 selected = KUSelfTourConstants.SHERIDAN;
             }
         }
         if (latitude > oldmain.get("sw").get(0) && latitude < oldmain.get("ne").get(0)) {
             if (longitude > oldmain.get("sw").get(1) && longitude < oldmain.get("ne").get(1)) {
-                Log.d("TEST", "click oldmain");
                 selected =  KUSelfTourConstants.OLD_MAIN;
             }
         }
         if (latitude > msu.get("sw").get(0) && latitude < msu.get("ne").get(0)) {
             if (longitude > msu.get("sw").get(1) && longitude < msu.get("ne").get(1)) {
-                Log.d("TEST", "click msu");
                 selected =  KUSelfTourConstants.STUDENT_UNION_BUILDING;
             }
         }
