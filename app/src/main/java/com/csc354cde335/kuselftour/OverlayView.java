@@ -98,55 +98,55 @@ public class OverlayView extends View{
     private Location[] populateBuildings(){
         Location[] buildings = new Location[13];
 
-        Location AF = new Location("Academic Forum");
+        Location AF = new Location(KUSelfTourConstants.AF);
         AF.setLatitude(40.512208); AF.setLongitude(-75.786278);
         buildings[0] = AF;
 
-        Location Beekey = new Location("Beekey");
+        Location Beekey = new Location(KUSelfTourConstants.BEEKEY);
         Beekey.setLatitude(40.515028); Beekey.setLongitude(-75.785800);
         buildings[1] = Beekey;
 
-        Location Boehm = new Location("Boehm");
+        Location Boehm = new Location(KUSelfTourConstants.BOEHM);
         Boehm.setLatitude(40.511950); Boehm.setLongitude(-75.784617);
         buildings[2] = Boehm;
 
-        Location deFran = new Location("deFrancesco");
+        Location deFran = new Location(KUSelfTourConstants.DEFRANCESCO);
         deFran.setLatitude(40.514181); deFran.setLongitude(-75.785814);
         buildings[3] = deFran;
 
-        Location Grim = new Location("Grim");
+        Location Grim = new Location(KUSelfTourConstants.GRIM);
         Grim.setLatitude(40.511314); Grim.setLongitude(-75.785797);
         buildings[4] = Grim;
 
-        Location Grad = new Location("Graduate");
+        Location Grad = new Location(KUSelfTourConstants.GRAD_CENTER);
         Grad.setLatitude(40.511164); Grad.setLongitude(-75.783347);
         buildings[5] = Grad;
 
-        Location Lytle = new Location("Lytle");
+        Location Lytle = new Location(KUSelfTourConstants.LYTLE);
         Lytle.setLatitude(40.513233); Lytle.setLongitude(-75.787525);
         buildings[6] = Lytle;
 
-        Location Rickenbach = new Location("Rickenbach");
+        Location Rickenbach = new Location(KUSelfTourConstants.RICKENBACH);
         Rickenbach.setLatitude(40.514400); Rickenbach.setLongitude(-75.784614);
         buildings[7] = Rickenbach;
 
-        Location Rohrbach = new Location("Rohrbach Library");
+        Location Rohrbach = new Location(KUSelfTourConstants.ROHRBACH);
         Rohrbach.setLatitude(40.513147); Rohrbach.setLongitude(-75.785419);
         buildings[8] = Rohrbach;
 
-        Location Schaeffer = new Location("Schaeffer Auditorium");
+        Location Schaeffer = new Location(KUSelfTourConstants.SCHAEFFER_AUDITORIUM);
         Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
         buildings[9] = Schaeffer;
 
-        Location Sheridan = new Location("Sharadan Art Studio");
+        Location Sheridan = new Location(KUSelfTourConstants.SHERIDAN);
         Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
         buildings[10] = Sheridan;
 
-        Location SUB = new Location("SUB");
+        Location SUB = new Location(KUSelfTourConstants.STUDENT_UNION_BUILDING);
         SUB.setLatitude(40.513586); SUB.setLongitude(-75.783917);
         buildings[11] = SUB;
 
-        Location Old = new Location("Old Main");
+        Location Old = new Location(KUSelfTourConstants.OLD_MAIN);
         Old.setLatitude(40.510250); Old.setLongitude(-75.783061);
         buildings[12] = Old;
 
@@ -396,7 +396,7 @@ public class OverlayView extends View{
                     //canvas.drawText("Distance to " + buildings[i].getProvider(),
                     canvas.drawText("Distance to " + buildings[i].getProvider(),
                             canvas.getWidth() / left_margin,
-                            canvas.getHeight() / 30 + text_size * (i + 3),
+                            canvas.getHeight() / 28 + text_size * (i + 3),
                             contentPaint);
 
                     // Change meters into km
@@ -418,8 +418,8 @@ public class OverlayView extends View{
 
                     // Degree direction when device is not lying flat
                     canvas.drawText("Direction: " + Float.toString(SensorData.deviceZBearing),
-                            canvas.getWidth() / left_margin,
-                            canvas.getHeight() / 2 + text_size * (19),
+                            canvas.getWidth() / 2,
+                            canvas.getHeight() - text_size,
                             contentPaint);
 
                     String closestBuilding = getClosestBuilding();
@@ -434,7 +434,7 @@ public class OverlayView extends View{
                 // Print GPS info
                 canvas.drawText(currentLocation.getLatitude() + ", " + currentLocation.getLongitude(),
                         canvas.getWidth() / left_margin,
-                        canvas.getHeight() / 30 + text_size * 14,
+                        canvas.getHeight() - text_size,
                         contentPaint);
             }
 
