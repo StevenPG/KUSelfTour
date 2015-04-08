@@ -43,7 +43,7 @@ public class Information extends Activity {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
-        if ("Beekey".equals(test)) {
+        if (KUSelfTourConstants.BEEKEY.equals(test)) {
             //Beekey
             listDataHeader.add("Beekey Info");
             listDataHeader.add("Clinical Experience & Outreach");
@@ -91,7 +91,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(4), specEdu);
         }
 
-        if ("Boehm".equals(test)) {
+        if (KUSelfTourConstants.BOEHM.equals(test)) {
             //Boehm
             listDataHeader.add("Boehm Info");
             listDataHeader.add("Biological Sciences");
@@ -120,8 +120,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(1), bio);
             listDataChild.put(listDataHeader.get(2), phySci);
         }
-        if ("deFrancesco".equals(test)) {
-
+        if (KUSelfTourConstants.DEFRANCESCO.equals(test)) {
             //deFrancesco
             listDataHeader.add("deFrancesco Info");
             listDataHeader.add("Business Administration");
@@ -151,7 +150,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(2), mls);
         }
 
-        if ("Grim".equals(test)) {
+        if (KUSelfTourConstants.GRIM.equals(test)) {
             //Grim
             listDataHeader.add("Grim Info");
             // Adding child data
@@ -163,7 +162,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(0), grimInfo);
         }
 
-        if ("Lytle".equals(test)) {
+        if (KUSelfTourConstants.LYTLE.equals(test)) {
             //Lytle
             listDataHeader.add("Lytle Info");
             listDataHeader.add("History");
@@ -203,7 +202,7 @@ public class Information extends Activity {
         }
 
 
-        if ("Rickenbach".equals(test)) {
+        if (KUSelfTourConstants.RICKENBACH.equals(test)) {
             //Rickenbach
             listDataHeader.add("Rickenbach Info");
             listDataHeader.add("Communication Studies");
@@ -233,7 +232,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(2), elect);
         }
 
-        if ("Sharadan Art Studio".equals(test)) {
+        if (KUSelfTourConstants.SHERIDAN.equals(test)) {
             //Sharadin
             listDataHeader.add("Sharadin Info");
             listDataHeader.add("Art Education & Crafts");
@@ -272,7 +271,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(3), far);
         }
 
-        if ("Old Main".equals(test)) {
+        if (KUSelfTourConstants.OLD_MAIN.equals(test)) {
             //Old Main
             listDataHeader.add("Old Main Info");
             listDataHeader.add("Sport Management & Leadership Studies");
@@ -374,7 +373,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(10), sw);
         }
 
-        if ("Grad Center".equals(test)) {
+        if (KUSelfTourConstants.GRAD_CENTER.equals(test)) {
             //Grad Center
             listDataHeader.add("Graduate Center Info");
             listDataHeader.add("Geography");
@@ -394,7 +393,7 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(0), gcInfo);
             listDataChild.put(listDataHeader.get(1), geog);
         }
-        if ("Rohrbach".equals(test)) {
+        if (KUSelfTourConstants.ROHRBACH.equals(test)) {
             //Rohrbach
             listDataHeader.add("Rohrbach Info");
             listDataHeader.add("Library Sciences & Instructional Technology");
@@ -415,8 +414,8 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(1), lib);
         }
 
-        if ("SUB".equals(test)) {
-//SUB
+        if (KUSelfTourConstants.STUDENT_UNION_BUILDING.equals(test)) {
+            //SUB
             listDataHeader.add("McFarland Student Union Building Info");
             //Adding child data
             List<String> subInfo = new ArrayList<>();
@@ -430,8 +429,8 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(0), subInfo);
         }
 
-        if ("AF".equals(test)) {
-//AF
+        if (KUSelfTourConstants.AF.equals(test)) {
+            //AF
             listDataHeader.add("Academic Forum Info");
             //Adding child data
             List<String> afInfo = new ArrayList<>();
@@ -444,8 +443,8 @@ public class Information extends Activity {
             listDataChild.put(listDataHeader.get(0), afInfo);
         }
 
-        if ("Schaeffer Auditorium".equals(test)) {
-//Auditorium
+        if (KUSelfTourConstants.SCHAEFFER_AUDITORIUM.equals(test)) {
+            //Auditorium
             listDataHeader.add("Schaeffer Auditorium Info");
             //Adding child data
             List<String> sInfo = new ArrayList<>();
