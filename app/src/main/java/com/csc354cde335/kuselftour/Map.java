@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-
 /**
  * Created by Justin on 3/25/2015.
  */
@@ -173,79 +172,79 @@ public class Map extends Activity implements OnMapReadyCallback {
         if (latitude > af.get("sw").get(0) && latitude < af.get("ne").get(0)) {
             if (longitude > af.get("sw").get(1) && longitude < af.get("ne").get(1)) {
                 Log.d("TEST", "click af");
-                selected = "AF";
+                selected = KUSelfTourConstants.AF;
             }
         }
         if (latitude > beekey.get("sw").get(0) && latitude < beekey.get("ne").get(0)) {
             if (longitude > beekey.get("sw").get(1) && longitude < beekey.get("ne").get(1)) {
                 Log.d("TEST", "click beekey");
-                selected = "Beekey";
+                selected = KUSelfTourConstants.BEEKEY;
             }
         }
         if (latitude > boehm.get("sw").get(0) && latitude < boehm.get("ne").get(0)) {
             if (longitude > boehm.get("sw").get(1) && longitude < boehm.get("ne").get(1)) {
                 Log.d("TEST", "click boehm");
-                selected = "Boehm";
+                selected = KUSelfTourConstants.BOEHM;
             }
         }
         if (latitude > defran.get("sw").get(0) && latitude < defran.get("ne").get(0)) {
             if (longitude > defran.get("sw").get(1) && longitude < defran.get("ne").get(1)) {
                 Log.d("TEST", "click defran");
-                selected = "deFrancesco";
+                selected = KUSelfTourConstants.DEFRANCESCO;
             }
         }
         if (latitude > gradcenter.get("sw").get(0) && latitude < gradcenter.get("ne").get(0)) {
             if (longitude > gradcenter.get("sw").get(1) && longitude < gradcenter.get("ne").get(1)) {
                 Log.d("TEST", "click gradcenter");
-                selected = "Grad Center";
+                selected = KUSelfTourConstants.GRAD_CENTER;
             }
         }
         if (latitude > grim.get("sw").get(0) && latitude < grim.get("ne").get(0)) {
             if (longitude > grim.get("sw").get(1) && longitude < grim.get("ne").get(1)) {
                 Log.d("TEST", "click grim");
-                selected = "Grim";
+                selected = KUSelfTourConstants.GRIM;
             }
         }
         if (latitude > lytle.get("sw").get(0) && latitude < lytle.get("ne").get(0)) {
             if (longitude > lytle.get("sw").get(1) && longitude < lytle.get("ne").get(1)) {
                 Log.d("TEST", "click lytle");
-                selected = "Lytle";
+                selected = KUSelfTourConstants.LYTLE;
             }
         }
         if (latitude > rickenbach.get("sw").get(0) && latitude < rickenbach.get("ne").get(0)) {
             if (longitude > rickenbach.get("sw").get(1) && longitude < rickenbach.get("ne").get(1)) {
                 Log.d("TEST", "click rickenbach");
-                selected = "Rickenbach";
+                selected = KUSelfTourConstants.RICKENBACH;
             }
         }
         if (latitude > rohrbach.get("sw").get(0) && latitude < rohrbach.get("ne").get(0)) {
             if (longitude > rohrbach.get("sw").get(1) && longitude < rohrbach.get("ne").get(1)) {
                 Log.d("TEST", "click rhorbach");
-                selected = "Rohrbach";
+                selected = KUSelfTourConstants.ROHRBACH;
             }
         }
         if (latitude > schaeffer.get("sw").get(0) && latitude < schaeffer.get("ne").get(0)) {
             if (longitude > schaeffer.get("sw").get(1) && longitude < schaeffer.get("ne").get(1)) {
                 Log.d("TEST", "click schaeffer");
-                selected = "Schaeffer Auditorium";
+                selected = KUSelfTourConstants.SCHAEFFER_AUDITORIUM;
             }
         }
         if (latitude > sheridan.get("sw").get(0) && latitude < sheridan.get("ne").get(0)) {
             if (longitude > sheridan.get("sw").get(1) && longitude < sheridan.get("ne").get(1)) {
                 Log.d("TEST", "click sheridan");
-                selected = "Sharadan Art Studio";
+                selected = KUSelfTourConstants.SHERIDAN;
             }
         }
         if (latitude > oldmain.get("sw").get(0) && latitude < oldmain.get("ne").get(0)) {
             if (longitude > oldmain.get("sw").get(1) && longitude < oldmain.get("ne").get(1)) {
                 Log.d("TEST", "click oldmain");
-                selected = "Old Main";
+                selected =  KUSelfTourConstants.OLD_MAIN;
             }
         }
         if (latitude > msu.get("sw").get(0) && latitude < msu.get("ne").get(0)) {
             if (longitude > msu.get("sw").get(1) && longitude < msu.get("ne").get(1)) {
                 Log.d("TEST", "click msu");
-                selected = "SUB";
+                selected =  KUSelfTourConstants.STUDENT_UNION_BUILDING;
             }
         }
         return selected;
