@@ -96,7 +96,7 @@ public class OverlayView extends View{
      * @return - returns list of buildings with information
      */
     private Location[] populateBuildings(){
-        Location[] buildings = new Location[11];
+        Location[] buildings = new Location[13];
 
         Location AF = new Location("Academic Forum");
         AF.setLatitude(40.512208); AF.setLongitude(-75.786278);
@@ -118,29 +118,37 @@ public class OverlayView extends View{
         Grim.setLatitude(40.511314); Grim.setLongitude(-75.785797);
         buildings[4] = Grim;
 
+        Location Grad = new Location("Graduate");
+        Grad.setLatitude(40.511164); Grad.setLongitude(-75.783347);
+        buildings[5] = Grad;
+
         Location Lytle = new Location("Lytle");
         Lytle.setLatitude(40.513233); Lytle.setLongitude(-75.787525);
-        buildings[5] = Lytle;
+        buildings[6] = Lytle;
 
         Location Rickenbach = new Location("Rickenbach");
         Rickenbach.setLatitude(40.514400); Rickenbach.setLongitude(-75.784614);
-        buildings[6] = Rickenbach;
+        buildings[7] = Rickenbach;
 
         Location Rohrbach = new Location("Rohrbach Library");
         Rohrbach.setLatitude(40.513147); Rohrbach.setLongitude(-75.785419);
-        buildings[7] = Rohrbach;
+        buildings[8] = Rohrbach;
 
         Location Schaeffer = new Location("Schaeffer Auditorium");
         Schaeffer.setLatitude(40.511842); Schaeffer.setLongitude(-75.783544);
-        buildings[8] = Schaeffer;
+        buildings[9] = Schaeffer;
 
         Location Sheridan = new Location("Sharadan Art Studio");
         Sheridan.setLatitude(40.512644); Sheridan.setLongitude(-75.783053);
-        buildings[9] = Sheridan;
+        buildings[10] = Sheridan;
+
+        Location SUB = new Location("SUB");
+        SUB.setLatitude(40.513586); SUB.setLongitude(-75.783917);
+        buildings[11] = SUB;
 
         Location Old = new Location("Old Main");
         Old.setLatitude(40.510250); Old.setLongitude(-75.783061);
-        buildings[10] = Old;
+        buildings[12] = Old;
 
         return buildings;
     }
