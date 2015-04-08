@@ -3,12 +3,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="#ba3e3e"
-    android:textColor="#c7c7c7">
+    android:background="#ba3e3e">
 
     <ExpandableListView
         android:id="@+id/lvExp"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:textColor="#c7c7c7"/>
 
 </LinearLayout>

@@ -4,16 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="#000000"
-    android:textColor="#f438a1">
+    android:background="#000000">
 
 
     <TextView
         android:id="@+id/lblListHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
-        android:textSize="17sp"
-        android:textColor="#f9f93d" />
+        android:textColor="#f438a1"
+        android:textSize="17sp"/>
 
 </LinearLayout>

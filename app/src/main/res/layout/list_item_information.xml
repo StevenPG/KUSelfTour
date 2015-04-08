@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="55dip"
     android:orientation="vertical"
-    android:background="#00ffab"
-    android:textColor="#00ff1e">
+    android:background="#00ffab">
 
     <TextView
         android:id="@+id/lblListItem"
@@ -12,6 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="17sp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
+        android:paddingBottom="5dp"
+        android:textColor="#00ff1e"/>
 
 </LinearLayout>
