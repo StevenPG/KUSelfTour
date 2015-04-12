@@ -21,6 +21,8 @@ public class Information extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
+       // String fontPath = "testFontJose.ttf";
+
         // get the list view
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
