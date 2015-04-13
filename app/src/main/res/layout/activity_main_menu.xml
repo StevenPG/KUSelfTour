@@ -3,45 +3,48 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/mainscreen"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainMenu">
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Camera View"
         android:id="@+id/ARButton"
 
         android:onClick="openAR"
         android:textSize="18dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"
+        android:layout_marginBottom="117dp"
+        android:singleLine="false" />
 
     <Button
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Map View"
         android:id="@+id/MapButton"
 
         android:onClick="openMap"
-        android:layout_below="@+id/ARButton"
+        android:textSize="18dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="43dp"
+        android:layout_alignRight="@+id/ARButton"
+        android:layout_alignEnd="@+id/ARButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="41dp"
-        android:textSize="18dp" />
+        android:background="@android:color/transparent"
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Information"
         android:id="@+id/Information"
 
         android:onClick="openInformation"
-        android:layout_below="@+id/MapButton"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="41dp"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        android:layout_marginTop="60dp"
+        android:layout_below="@+id/DebugSwitch"/>
 
     <Switch
         android:layout_width="wrap_content"
