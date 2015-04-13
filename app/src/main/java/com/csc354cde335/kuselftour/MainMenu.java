@@ -37,7 +37,7 @@ public class MainMenu extends ActionBarActivity {
         setContentView(R.layout.activity_main_menu);
 
         // CHANGE THIS TO ALLOW FOR DEBUGGING OR NOT
-        allowDebug = true;
+        allowDebug = false;
 
         isDebugOn = false;
         FieldOfView = 15;
