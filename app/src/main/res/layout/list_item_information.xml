@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="55dip"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:showDividers="none">
 
     <TextView
         android:id="@+id/lblListItem"
@@ -12,6 +13,7 @@
         android:textSize="17sp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
         android:textColor="#000000"/>
 
 </LinearLayout>

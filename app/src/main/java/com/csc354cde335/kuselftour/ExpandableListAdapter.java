@@ -49,7 +49,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = Inflater.inflate(R.layout.list_item_information, null);
         }
-
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
 
@@ -87,7 +86,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = Inflater.inflate(R.layout.list_group_information, null);
         }
-        Log.e("hello","Get Group View");
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);

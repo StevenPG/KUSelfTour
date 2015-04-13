@@ -26,6 +26,17 @@ public class Information extends Activity {
         // get the list view
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
 
+        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousItem = -1;
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(groupPosition != previousItem)
+                    expListView.collapseGroup(previousItem);
+                previousItem = groupPosition;
+            }
+        });
+
        Intent intent = getIntent();
        String building = getIntent().getStringExtra("selected");
 
