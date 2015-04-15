@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -362,6 +363,16 @@ public class ARCamera extends Activity implements ConnectionCallbacks, OnConnect
     public void startInfoActivity(String buildingName){
         Intent intent = new Intent(this, Information.class);
         intent.putExtra("selected", buildingName);
+        startActivity(intent);
+    }
+
+    public void openMap(View view) {
+        Intent intent = new Intent(this, Map.class);
+        startActivity(intent);
+    }
+
+    public void openMainMenu(View view) {
+        Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
 

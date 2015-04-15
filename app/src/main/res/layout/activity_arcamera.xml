@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ar_view_pane"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
 
-</FrameLayout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ar_view_pane"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </FrameLayout>
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="H"
+        android:id="@+id/H"
+        android:onClick="openMainMenu"
+        android:layout_gravity="center_horizontal|bottom"
+        android:textSize="30dp"
+        android:background="@android:drawable/btn_default"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/M"
+        android:layout_toStartOf="@+id/M" />
+
+    <Button
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="M"
+        android:id="@+id/M"
+        android:onClick="openMap"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="30dp"
+        android:background="@android:drawable/btn_default"
+        android:layout_gravity="right|bottom" />
+</RelativeLayout>

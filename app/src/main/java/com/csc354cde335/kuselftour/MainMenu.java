@@ -127,6 +127,11 @@ public class MainMenu extends ActionBarActivity {
         startActivity(intent);
     }
 
+    public void openMainMenu(View view) {
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
+    }
+
     public void onDebugClick(View view){
         Switch debugSwitch = (Switch) findViewById(R.id.DebugSwitch);
         if(debugSwitch.isChecked()){

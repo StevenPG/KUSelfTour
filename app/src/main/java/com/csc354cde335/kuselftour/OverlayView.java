@@ -449,8 +449,6 @@ public class OverlayView extends View{
             contentPaint.setTextSize(100);
             contentPaint.setColor(Color.WHITE);
 
-            Paint paint = new Paint(Color.BLUE);
-
             // Only run if facing a building
             if (!facedBuilding.getProvider().equals("NA")) {
                 // Break into whitespace and print each on new line
@@ -467,7 +465,6 @@ public class OverlayView extends View{
 
                     case 2:{
                         // Print a box around the text
-                        canvas.drawRect(30, 30, 30, 30, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
@@ -480,7 +477,6 @@ public class OverlayView extends View{
                     }
                     case 3:{
                         // Print a box around the text
-                        canvas.drawRect(30, 30, 30, 30, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
