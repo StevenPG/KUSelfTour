@@ -32,7 +32,7 @@ public class Map extends Activity implements OnMapReadyCallback {
     private HashMap<String, ArrayList<Double>> sheridan = new HashMap();
     private HashMap<String, ArrayList<Double>> oldmain = new HashMap();
     private HashMap<String, ArrayList<Double>> msu = new HashMap();
-    private LatLngBounds kubounds = new LatLngBounds(new LatLng(40.509491, -75.790372), new LatLng(40.516961, -75.781558));
+    private LatLngBounds kubounds = new LatLngBounds(new LatLng(40.508967, -75.789671), new LatLng(40.517011, -75.780476));
     private Float MAX_ZOOM = 16f;
     private Float MIN_ZOOM = 18f;
     private Float CAMERA_BORDER = .0001f;
@@ -57,7 +57,7 @@ public class Map extends Activity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(final GoogleMap map) {
-        // Location of the center of the norts side of Kutztown University's north campus
+        // Location of the center of the north side of Kutztown University's north campus
         LatLng kutztown = new LatLng(40.513266, -75.785965);
 
         // Place the overlay image onto the map
