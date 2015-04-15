@@ -3,6 +3,8 @@ package com.csc354cde335.kuselftour;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -447,12 +449,15 @@ public class OverlayView extends View{
             contentPaint.setTextSize(100);
             contentPaint.setColor(Color.WHITE);
 
+            Paint paint = new Paint(Color.BLUE);
+
             // Only run if facing a building
             if (!facedBuilding.getProvider().equals("NA")) {
                 // Break into whitespace and print each on new line
                 String[] splitText = facedBuilding.getProvider().split("\\s+");
                 switch(splitText.length){
                     case 1:{
+                        // Print a box around the text
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
@@ -461,6 +466,8 @@ public class OverlayView extends View{
                     }
 
                     case 2:{
+                        // Print a box around the text
+                        canvas.drawRect(30, 30, 30, 30, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
@@ -472,6 +479,8 @@ public class OverlayView extends View{
                         break;
                     }
                     case 3:{
+                        // Print a box around the text
+                        canvas.drawRect(30, 30, 30, 30, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,

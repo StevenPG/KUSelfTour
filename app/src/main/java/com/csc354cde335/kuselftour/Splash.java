@@ -40,7 +40,7 @@ public class Splash extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_screen);
-        waitTime = 4000;
+        waitTime = 2000;
         // Debug time below
         //waitTime = 100;
     }
