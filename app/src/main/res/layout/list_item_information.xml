@@ -7,7 +7,7 @@
     android:childDivider="@android:color/transparent">
 
     <TextView
-        android:id="@+id/custom_font"
+        android:id="@+id/lblListItem"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="17sp"
@@ -17,4 +17,3 @@
         android:textColor="#000000"/>
 
 </LinearLayout>
-

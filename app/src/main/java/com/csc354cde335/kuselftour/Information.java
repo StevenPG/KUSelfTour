@@ -23,9 +23,7 @@ public class Information extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
-        TextView txt = (TextView) findViewById(R.id.custom_font);
-        Typeface font = Typeface.createFromAsset(getAssets(), "testFontJose.ttf");
-        txt.setTypeface(font);
+
 
         // get the list view
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
