@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 public class Information extends Activity {
 
@@ -21,7 +23,9 @@ public class Information extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
-       // String fontPath = "testFontJose.ttf";
+        TextView txt = (TextView) findViewById(R.id.custom_font);
+        Typeface font = Typeface.createFromAsset(getAssets(), "testFontJose.ttf");
+        txt.setTypeface(font);
 
         // get the list view
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
@@ -47,6 +51,8 @@ public class Information extends Activity {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+
+
     }
 
     /*
