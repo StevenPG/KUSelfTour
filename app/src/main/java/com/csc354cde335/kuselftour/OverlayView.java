@@ -8,12 +8,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -448,6 +450,16 @@ public class OverlayView extends View{
             contentPaint.setTextAlign(Paint.Align.CENTER);
             contentPaint.setTextSize(100);
             contentPaint.setColor(Color.WHITE);
+            // Used Blue
+            contentPaint.setARGB(255, 80, 188, 200);
+
+            // Paint for boxes
+            Paint paint = new Paint();
+            // Specific blue specified as background
+            // Used light blue
+            paint.setARGB(255, 203 ,233, 237);
+
+            // Gray blue: 176, 203, 207
 
             // Only run if facing a building
             if (!facedBuilding.getProvider().equals("NA")) {
@@ -455,7 +467,7 @@ public class OverlayView extends View{
                 String[] splitText = facedBuilding.getProvider().split("\\s+");
                 switch(splitText.length){
                     case 1:{
-                        // Print a box around the text
+                        canvas.drawRect(80, 500, 640, 680, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
@@ -465,6 +477,7 @@ public class OverlayView extends View{
 
                     case 2:{
                         // Print a box around the text
+                        canvas.drawRect(80, 500, 640, 775, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
@@ -477,6 +490,7 @@ public class OverlayView extends View{
                     }
                     case 3:{
                         // Print a box around the text
+                        canvas.drawRect(80, 450, 640, 900, paint);
                         canvas.drawText(splitText[0],
                                 canvas.getWidth() / 2,
                                 (canvas.getHeight() / 10) * 5,
