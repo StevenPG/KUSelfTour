@@ -15,25 +15,23 @@
     <Button
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:text="H"
         android:id="@+id/home"
         android:layout_gravity="center_horizontal"
         android:textSize="30dp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/camera"
         android:layout_toStartOf="@+id/camera"
-        android:background="@android:drawable/btn_default" />
+        android:background="@drawable/homebutton" />
 
     <Button
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:text="C"
         android:id="@+id/camera"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textSize="30dp"
-        android:background="@android:drawable/btn_default" />
+        android:background="@drawable/camerabutton" />
 
 
 </RelativeLayout>
