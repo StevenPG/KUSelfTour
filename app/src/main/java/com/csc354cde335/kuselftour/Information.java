@@ -71,7 +71,7 @@ public class Information extends Activity {
             List<String> beekeyInfo = new ArrayList<>();
             beekeyInfo.add("AKA: Education Center");
             beekeyInfo.add("Location: North Side");
-            beekeyInfo.add("Description:");
+            beekeyInfo.add("Description: Beekey Education Center is a busy place - providing a home for Kutztown's Elementary, Secondary and Special Education departments, the Office of Student Teaching and the Office of the Dean of the College of Education.");
             // Adding child data
             List<String> clinical = new ArrayList<>();
             clinical.add("Chair Name: Cathy Kirn");
@@ -112,7 +112,7 @@ public class Information extends Activity {
             List<String> boehmInfo = new ArrayList<>();
             boehmInfo.add("AKA: Science Center");
             boehmInfo.add("Location: North Side");
-            boehmInfo.add("Description:");
+            boehmInfo.add("Description: Boehm Science Center is shared by the Biological and Physical Science departments. In addition to the shared facilities, each science department has its own specifically tailored facilities.");
             // Adding child data
             List<String> bio = new ArrayList<>();
             bio.add("Chair Name: Carol Mapes");
@@ -138,7 +138,7 @@ public class Information extends Activity {
             List<String> deFranInfo = new ArrayList<>();
             deFranInfo.add("AKA: deFran");
             deFranInfo.add("Location: North Side");
-            deFranInfo.add("Description:");
+            deFranInfo.add("Description: The deFrancesco Building is full of students and faculty from many disciplines.");
             //Adding child data
             List<String> business = new ArrayList<>();
             business.add("Chair Name: Roger Hibbs");
@@ -163,7 +163,7 @@ public class Information extends Activity {
             List<String> grimInfo = new ArrayList<>();
             grimInfo.add("AKA: Science Building");
             grimInfo.add("Location: North Side");
-            grimInfo.add("Description:");
+            grimInfo.add("Description: Grim Science Building houses the university’s observatory and planetarium, where students learn about stars, constellations and the universe via the school’s astronomy program. Also, a computer lab for the Computer Science Department is located here alone with faculty officers for the Physical Sciences Department.");
             listDataChild.put(listDataHeader.get(0), grimInfo);
         }
 
@@ -177,7 +177,7 @@ public class Information extends Activity {
             List<String> lytleInfo = new ArrayList<>();
             lytleInfo.add("AKA: Outskirts of Campus");
             lytleInfo.add("Location: North Side");
-            lytleInfo.add("Description:");
+            lytleInfo.add("Description: Lytle Hall is the location of the university’s Departments of English, History and Mathematics. Lytle Hall is the farthest building from our dorms but it's a beautiful walk, and the back-and-forth of daily classes in Lytle is one sure way to help ward off the dreaded Freshman 15!");
             // Adding child data
             List<String> history = new ArrayList<>();
             history.add("Chair Name: Andrew Arnold");
@@ -212,7 +212,7 @@ public class Information extends Activity {
             List<String> rickInfo = new ArrayList<>();
             rickInfo.add("AKA: Learning Center");
             rickInfo.add("Location: North Side");
-            rickInfo.add("Description:");
+            rickInfo.add("Description: Featuring a state-of-the-art Electronic Media Department complete with a working television studio, Rickenbach Learning Center may be one of the most exciting buildings on campus. Electronic Media students shoot complete television shows in this building!");
             // Adding child data
             List<String> eng1 = new ArrayList<>();
             eng1.add("Chair Name: Claire vanErns");
@@ -240,7 +240,7 @@ public class Information extends Activity {
             List<String> sharadinInfo = new ArrayList<>();
             sharadinInfo.add("AKA: Art Building");
             sharadinInfo.add("Location: North Side");
-            sharadinInfo.add("Description:");
+            sharadinInfo.add("Description: The Sharadin Art Building includes spaces for art teaching labs and studios. A main attraction is the Sharadin Art Gallery, where professionally executed solo and group exhibitions of contemporary art in a variant of mediums is presented.  An adjoining student gallery gives the opportunity to showcase work during students’ time at KU.");
             // Adding child data
             List<String> art = new ArrayList<>();
             art.add("Chair Name: John White");
@@ -282,7 +282,7 @@ public class Information extends Activity {
             List<String> omInfo = new ArrayList<>();
             omInfo.add("AKA: Old Main");
             omInfo.add("Location: South Side");
-            omInfo.add("Description:");
+            omInfo.add("Description: Built in 1866, Old Main is the oldest and most historic building on campus. In our founding years at the close of the nineteenth century, Old Main was our sole building, providing classroom, administrative and living space.");
             // Adding child data
             List<String> sport = new ArrayList<>();
             sport.add("Chair Name: Lorri Engstrom");
@@ -364,7 +364,7 @@ public class Information extends Activity {
             List<String> gcInfo = new ArrayList<>();
             gcInfo.add("AKA: Grad Center");
             gcInfo.add("Location: North Side");
-            gcInfo.add("Description:");
+            gcInfo.add("Description: Once the campus library, Kutztown University's Graduate Center houses the University’s Office of Assessment, as well as the dean of the College of Liberal Arts and Sciences, the Geography Department and classrooms.");
             // Adding child data
             List<String> geog = new ArrayList<>();
             geog.add("Chair Name: Richard Courtney");
@@ -382,7 +382,7 @@ public class Information extends Activity {
             List<String> libInfo = new ArrayList<>();
             libInfo.add("AKA: Library");
             libInfo.add("Location: North Side");
-            libInfo.add("Description:");
+            libInfo.add("Description: An array of useful resources is available to you in Kutztown University's Rohrbach Library. Throughout the building are computers to access internal and external resources. There are photocopiers, study rooms, study carrels, and ample seating areas.");
             // Adding child data
             List<String> lib = new ArrayList<>();
             lib.add("Chair Name: Andrea Harmer");
