@@ -169,6 +169,7 @@ public class OverlayView extends View{
         Float minValue = Float.MAX_VALUE;
         int minIndex = 0;
 
+        // Get location
         Location currentLocation = ARCamera.mCurrentLocation;
 
         if(currentLocation != null) {
