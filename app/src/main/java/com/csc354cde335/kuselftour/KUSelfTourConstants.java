@@ -14,7 +14,7 @@ public class KUSelfTourConstants {
     public static final String RICKENBACH = "Rickenbach";
     public static final String ROHRBACH = "Rohrbach";
     public static final String SCHAEFFER_AUDITORIUM = "Schaeffer Auditorium";
-    public static final String SHERIDAN = "Sharadan Art Studio";
+    public static final String SHERIDAN = "Sharadin";
     public static final String OLD_MAIN = "Old Main";
-    public static final String STUDENT_UNION_BUILDING = "Student Union Building";
+    public static final String STUDENT_UNION_BUILDING = "MSU";
 }

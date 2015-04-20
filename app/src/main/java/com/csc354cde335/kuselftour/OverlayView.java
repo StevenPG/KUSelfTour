@@ -193,7 +193,7 @@ public class OverlayView extends View{
      * This getClosestBuilding method takes a list of available buildings
      */
     protected Location getClosestBuilding(Location currentLocation, ArrayList buildingsBeingFaced){
-
+        Log.e("", Float.toString(currentLocation.getAccuracy()));
         Location closestBuilding = new Location("NA");
         if(buildingsBeingFaced.size() > 0) {
             closestBuilding = (Location) buildingsBeingFaced.get(0);
