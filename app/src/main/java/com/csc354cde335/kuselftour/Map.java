@@ -2,7 +2,6 @@ package com.csc354cde335.kuselftour;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,8 +36,6 @@ public class Map extends Activity implements OnMapReadyCallback {
     private Float MAX_ZOOM = 16f;
     private Float MIN_ZOOM = 18f;
     private Float CAMERA_BORDER = .0001f;
-    public static Double longitude;
-    public static Double latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +53,6 @@ public class Map extends Activity implements OnMapReadyCallback {
         // Initialize map
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
 
     @Override
@@ -144,13 +140,6 @@ public class Map extends Activity implements OnMapReadyCallback {
         });
     }
 
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-        }
-    };
     private void initializeBuildingLocations() {
         // Initilize the bounds of each building to be used to see if the user clicked any buildings
         af.put("ne", new ArrayList<>(Arrays.asList(40.512530, -75.785973)));
@@ -199,16 +188,6 @@ public class Map extends Activity implements OnMapReadyCallback {
                 startActivity(i);
             }
         });
-    }
-
-    public void openMainMenu(View view) {
-        Intent intent = new Intent(this, MainMenu.class);
-        startActivity(intent);
-    }
-
-    public void openAR(View view) {
-        Intent intent = new Intent(this, ARCamera.class);
-        startActivity(intent);
     }
 
     // Test whether the user clicked a building or not
