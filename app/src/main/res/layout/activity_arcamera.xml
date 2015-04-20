@@ -20,7 +20,8 @@
         android:background="@drawable/homebutton"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/M"
-        android:layout_toStartOf="@+id/M" />
+        android:layout_toStartOf="@+id/M"
+        android:layout_margin="1dp"/>
 
     <Button
         android:layout_width="70dp"
@@ -32,6 +33,7 @@
         android:layout_alignParentEnd="true"
         android:textSize="30dp"
         android:background="@drawable/mapbutton"
-        android:layout_gravity="right|bottom" />
+        android:layout_gravity="right|bottom"
+        android:layout_margin="1dp"/>
 
 </RelativeLayout>

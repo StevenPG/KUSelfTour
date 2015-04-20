@@ -10,29 +10,26 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ARButton"
-
         android:onClick="openAR"
         android:textSize="18dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
-        android:layout_marginBottom="117dp"
-        android:singleLine="false" />
+        android:singleLine="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="185dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/MapButton"
-
         android:onClick="openMap"
         android:textSize="18dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="43dp"
-        android:layout_alignRight="@+id/ARButton"
-        android:layout_alignEnd="@+id/ARButton"
-        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="74dp"
         android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
         android:layout_alignParentStart="true" />
 
     <Button
