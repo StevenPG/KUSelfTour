@@ -32,7 +32,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textSize="30dp"
-        android:background="@drawable/mapbutton"
+        android:background="@drawable/mapbuuton"
         android:layout_gravity="right|bottom"
         android:layout_margin="1dp"/>
 
